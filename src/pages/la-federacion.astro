@@ -1,0 +1,185 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="La Federación · Pueblos de Riaza"
+  description="Federación de Asociaciones de Pueblos de Riaza: la voz común de nueve pueblos de la Sierra de Ayllón desde 1999."
+>
+  <!-- APERTURA -->
+  <header class="apertura contenedor-ancho">
+    <p class="ojillo">La Federación</p>
+    <h1 class="apertura__titulo">
+      La voz común de<br />nueve pueblos
+    </h1>
+    <p class="apertura__lede">
+      Hace más de veinticinco años, las asociaciones vecinales y culturales
+      del nordeste de Segovia decidieron unirse para sumar esfuerzos. Así nació
+      la Federación de Pueblos de Riaza, un espacio de colaboración que hoy
+      sigue tan vivo como entonces.
+    </p>
+  </header>
+
+  <!-- BLOQUE 1: presentación + rejilla de fotos -->
+  <section class="bloque bloque--crema">
+    <div class="contenedor-ancho bloque__grid">
+      <div class="bloque__texto">
+        <p class="prosa-grande">
+          La <strong>Federación de Asociaciones de Pueblos de Riaza</strong> es
+          una entidad sin ánimo de lucro fundada en 1999 que reúne a las
+          asociaciones vecinales y culturales de la comarca.
+        </p>
+        <p>
+          Reúne a las asociaciones de Aldeanueva del Monte, Alquité, Barahona
+          de Fresno, Becerril, Madriguera, Martín Muñoz de Ayllón, El Muyo, El
+          Negredo y Serracín. Juntas trabajamos por mejorar la vida en nuestros
+          pueblos, cuidar su patrimonio y promover un desarrollo sostenible y
+          respetuoso con lo que somos.
+        </p>
+        <a class="boton boton--linea" href="/los-pueblos/">Conoce los pueblos</a>
+      </div>
+      <div class="mosaico">
+        <div class="mosaico__col">
+          <img src="/images/Esplendor-en-las-praderas-de-El-Muyo.jpg" alt="" class="r34" />
+          <img src="/images/Roble-de-mi-tierra.jpg" alt="" class="r43" />
+        </div>
+        <div class="mosaico__col mosaico__col--baja">
+          <img src="/images/Pueblo.jpg" alt="" class="r34" />
+          <img src="/images/Un-lugar-para-vivir-la-calma.jpeg" alt="" class="r43" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOQUE 2: propósito tipo manifiesto -->
+  <section class="bloque">
+    <div class="contenedor-ancho bloque__grid bloque__grid--invertido">
+      <aside class="bloque__nota">
+        <p>
+          La Federación se rige por un modelo de gobernanza participativo,
+          basado en la transparencia y la democracia interna. Todos los cargos
+          de la Junta Directiva son voluntarios.
+        </p>
+      </aside>
+      <div>
+        <p class="manifiesto">
+          Nuestro propósito es unir esfuerzos para la defensa del patrimonio,
+          la promoción del desarrollo sostenible y la representación de los
+          intereses de nuestros pueblos ante instituciones y organismos.
+        </p>
+        <div class="dosolumnas">
+          <div>
+            <h3 class="mini">Misión</h3>
+            <p>
+              Fortalecer el tejido asociativo de la comarca, promoviendo el
+              desarrollo integral de los pueblos y garantizando la conservación
+              de su riqueza histórica, cultural y natural. Somos el vínculo
+              entre las asociaciones federadas y las administraciones públicas.
+            </p>
+          </div>
+          <div>
+            <h3 class="mini">Visión</h3>
+            <p>
+              Ser el referente de participación ciudadana y desarrollo
+              sostenible en el nordeste de Segovia, consolidándonos como una
+              entidad clave en la preservación del entorno rural y su futuro.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOQUE 3: foto a sangre + cita -->
+  <section class="bloque bloque--oscuro">
+    <div class="contenedor-ancho bloque__grid">
+      <figure class="foto-grande">
+        <img src="/images/Historia.jpg" alt="Arquitectura tradicional de la Sierra de Ayllón" />
+      </figure>
+      <div class="bloque__texto">
+        <p class="manifiesto manifiesto--claro">
+          Conformamos un espacio de cooperación y apoyo mutuo: fomentamos la
+          regeneración de los cascos urbanos, la protección del medio ambiente
+          y las actividades sociales, culturales y deportivas.
+        </p>
+        <p class="texto-claro">
+          Hoy afrontamos nuevos retos, como contribuir a la mejora de las
+          normas urbanísticas o velar por la integridad del territorio frente
+          al proyecto minero planteado en la zona.
+        </p>
+        <a class="boton boton--claro" href="/las-asociaciones/">Las asociaciones</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .apertura { padding: 5rem 1.5rem 3rem; max-width: 56rem; }
+  .apertura__titulo { font-size: clamp(2.6rem, 7vw, 5rem); margin: 0.8rem 0 0; }
+  .apertura__lede {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem); line-height: 1.5;
+    color: var(--c-tinta-suave); max-width: 40rem; margin-top: 1.8rem;
+  }
+
+  .bloque { padding: 5rem 0; }
+  .bloque--crema { background: var(--c-crema); }
+  .bloque--oscuro { background: var(--c-tinta); color: var(--c-papel); }
+  .bloque__grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .bloque__grid--invertido { grid-template-columns: 0.7fr 1.3fr; align-items: start; }
+  .bloque__texto p { margin-bottom: 1.3rem; }
+
+  .prosa-grande {
+    font-family: var(--serif); font-size: 1.7rem; line-height: 1.4;
+    color: var(--c-tinta);
+  }
+  .bloque--crema .prosa-grande strong { color: var(--c-rojo); font-weight: 500; }
+
+  .manifiesto {
+    font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.3; letter-spacing: -0.01em; margin-bottom: 2.5rem;
+  }
+  .manifiesto--claro { color: var(--c-papel); }
+  .texto-claro { color: color-mix(in srgb, var(--c-papel) 75%, transparent); }
+
+  .bloque__nota p {
+    font-size: 0.92rem; color: var(--c-tinta-suave);
+    border-left: 2px solid var(--c-ocre); padding-left: 1.2rem; line-height: 1.7;
+  }
+
+  .dosolumnas { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  .mini {
+    font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--c-rojo); margin-bottom: 0.8rem;
+  }
+  .dosolumnas p { font-size: 0.98rem; color: var(--c-tinta-suave); }
+
+  /* Mosaico de fotos en dos columnas, una desplazada (sin solaparse) */
+  .mosaico { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .mosaico__col { display: flex; flex-direction: column; gap: 0.7rem; }
+  .mosaico__col--baja { margin-top: 3rem; }
+  .mosaico img { width: 100%; object-fit: cover; border-radius: 2px; display: block; }
+  .mosaico .r34 { aspect-ratio: 3/4; }
+  .mosaico .r43 { aspect-ratio: 4/3; }
+
+  .foto-grande { aspect-ratio: 4/5; overflow: hidden; border-radius: 2px; }
+  .foto-grande img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
+
+  .boton {
+    display: inline-block; background: var(--c-tinta); color: var(--c-papel);
+    padding: 0.8rem 1.8rem; font-size: 0.82rem; letter-spacing: 0.06em;
+    text-transform: uppercase; border-radius: 2px; transition: all 0.2s ease;
+  }
+  .boton--linea { background: transparent; color: var(--c-tinta); border: 1px solid var(--c-tinta); }
+  .boton--linea:hover { background: var(--c-rojo); border-color: var(--c-rojo); color: #fff; }
+  .boton--claro { background: var(--c-papel); color: var(--c-tinta); }
+  .boton--claro:hover { background: var(--c-ocre); color: var(--c-tinta); }
+
+  @media (max-width: 860px) {
+    .bloque__grid, .bloque__grid--invertido, .dosolumnas { grid-template-columns: 1fr; gap: 2.5rem; }
+    .mosaico__b, .mosaico__d { margin-top: 0; }
+    .foto-grande { aspect-ratio: 3/2; }
+  }
+</style>

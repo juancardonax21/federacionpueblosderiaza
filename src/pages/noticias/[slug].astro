@@ -1,0 +1,100 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const noticias = await getCollection("noticias");
+  return noticias.map((n) => ({ params: { slug: n.slug }, props: { noticia: n } }));
+}
+
+const { noticia } = Astro.props;
+const { Content } = await noticia.render();
+
+// Otras noticias para el pie
+const todas = (await getCollection("noticias")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const otras = todas.filter((n) => n.slug !== noticia.slug).slice(0, 3);
+
+const fecha = (d) =>
+  d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+---
+
+<Base title={`${noticia.data.title} · Federación Pueblos de Riaza`} description={noticia.data.description}>
+  <article class="articulo">
+    <div class="articulo__cab contenedor">
+      <a class="volver" href="/">← Al día</a>
+      <time class="meta">{fecha(noticia.data.date)}</time>
+      <h1>{noticia.data.title}</h1>
+      {noticia.data.description && (
+        <p class="articulo__entradilla">{noticia.data.description}</p>
+      )}
+    </div>
+
+    {noticia.data.cover && (
+      <figure class="articulo__portada contenedor-ancho">
+        <img src={noticia.data.cover} alt={noticia.data.title} />
+      </figure>
+    )}
+
+    <div class="articulo__cuerpo prosa contenedor">
+      <Content />
+    </div>
+  </article>
+
+  {otras.length > 0 && (
+    <section class="contenedor-ancho mas-noticias">
+      <header class="seccion-cab"><h2>Más noticias</h2><span class="seccion-cab__linea"></span></header>
+      <div class="rejilla-3">
+        {otras.map((n) => (
+          <a class="tarjeta" href={`/noticias/${n.slug}/`}>
+            {n.data.cover ? (
+              <div class="tarjeta__img"><img src={n.data.cover} alt={n.data.title} /></div>
+            ) : (
+              <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
+            )}
+            <time class="meta">{fecha(n.data.date)}</time>
+            <h3 class="tarjeta__titulo">{n.data.title}</h3>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .articulo { padding-top: 3rem; }
+  .articulo__cab { text-align: center; max-width: 48rem; }
+  .volver { font-size: 0.85rem; color: var(--c-tenue); display: inline-block; margin-bottom: 2rem; }
+  .volver:hover { color: var(--acento); }
+  .articulo__cab .meta { margin-bottom: 1rem; }
+  .articulo__cab h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+  .articulo__entradilla {
+    font-size: 1.3rem; line-height: 1.6; color: var(--c-tinta-suave);
+    margin-top: 1.2rem; font-family: var(--serif); font-style: italic;
+  }
+  .articulo__portada {
+    margin: 3rem auto; aspect-ratio: 16/8; overflow: hidden; border-radius: var(--radio);
+  }
+  .articulo__portada img { width: 100%; height: 100%; object-fit: cover; }
+  .articulo__cuerpo { font-size: 1.12rem; }
+  .articulo__cuerpo :global(h2),
+  .articulo__cuerpo :global(h3) { margin-top: 2.2rem; }
+  .articulo__cuerpo :global(img) { border-radius: var(--radio); margin: 2rem 0; }
+  .articulo__cuerpo :global(a[href$=".pdf"]) {
+    display: inline-block; background: var(--c-crema); padding: 0.6rem 1.1rem;
+    border-radius: var(--radio); text-decoration: none; font-weight: 500;
+  }
+
+  .mas-noticias { margin-top: 6rem; }
+  .rejilla-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem 2rem; }
+  .tarjeta__img { overflow: hidden; border-radius: var(--radio); aspect-ratio: 3/2; margin-bottom: 1rem; }
+  .tarjeta__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .tarjeta:hover .tarjeta__img img { transform: scale(1.04); }
+  .tarjeta__img--vacia { background: var(--c-crema); display: flex; align-items: center; justify-content: center; }
+  .tarjeta__img--vacia span { font-family: var(--serif); font-size: 1.5rem; color: var(--c-borde); letter-spacing: 0.1em; }
+  .tarjeta__titulo { font-size: 1.25rem; margin: 0.4rem 0 0; transition: color 0.2s ease; }
+  .tarjeta:hover .tarjeta__titulo { color: var(--acento); }
+
+  @media (max-width: 860px) { .rejilla-3 { grid-template-columns: 1fr; } }
+</style>

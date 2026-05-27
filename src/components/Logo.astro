@@ -1,0 +1,44 @@
+---
+// Marca de la Federación. Dos variantes:
+//  - "cabecera": isotipo FPR + nombre en tipografía (para la barra superior)
+//  - "completo": logo oficial con texto (para el pie)
+interface Props {
+  variante?: "cabecera" | "completo" | "isotipo";
+  color?: "tinta" | "papel";
+}
+const { variante = "cabecera", color = "tinta" } = Astro.props;
+const c = color === "papel" ? "var(--c-papel)" : "var(--c-tinta)";
+---
+
+{variante === "completo" ? (
+  <img src="/marca/logo-completo.png" alt="Federación de Asociaciones de Pueblos de Riaza" class="logo-completo" />
+) : variante === "isotipo" ? (
+  <img src="/marca/isotipo-fpr.png" alt="Federación Pueblos de Riaza" class="logo-iso" />
+) : (
+  <span class="logo-cab" style={`--logo-color:${c}`}>
+    <img src="/marca/isotipo-fpr.png" alt="" class="logo-cab__iso" aria-hidden="true" />
+    <span class="logo-cab__txt">
+      <span class="logo-cab__nombre">Federación</span>
+      <span class="logo-cab__sub">Pueblos de Riaza</span>
+    </span>
+  </span>
+)}
+
+<style>
+  .logo-completo { height: 3.4rem; width: auto; }
+  .logo-iso { height: 2.8rem; width: auto; }
+
+  .logo-cab { display: inline-flex; align-items: center; gap: 0.7rem; color: var(--logo-color); }
+  .logo-cab__iso { height: 2.4rem; width: auto; display: block; }
+  .logo-cab__txt { display: inline-flex; flex-direction: column; line-height: 1; }
+  .logo-cab__nombre {
+    font-family: var(--serif); font-size: 1.3rem; font-weight: 500; letter-spacing: -0.01em;
+  }
+  .logo-cab__sub {
+    font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.16em;
+    text-transform: uppercase; margin-top: 0.3rem; opacity: 0.65;
+  }
+  @media (max-width: 540px) {
+    .logo-cab__sub { display: none; }
+  }
+</style>

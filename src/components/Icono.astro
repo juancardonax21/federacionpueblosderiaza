@@ -1,0 +1,85 @@
+---
+// Iconos de línea, estilo editorial. Trazo fino, evocan naturaleza/territorio.
+interface Props { nombre: string; size?: number; }
+const { nombre, size = 32 } = Astro.props;
+const s = size;
+---
+<span class="icono" style={`--s:${s}px`} aria-hidden="true">
+  {nombre === "monte" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M4 38 L18 14 L28 30 L34 20 L44 38 Z" />
+      <path d="M14 38 L22 26" opacity="0.5" />
+    </svg>
+  )}
+  {nombre === "hoja" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 36 C12 20 24 10 38 10 C38 26 26 36 12 36 Z" />
+      <path d="M12 36 C18 30 28 22 36 14" opacity="0.5" />
+    </svg>
+  )}
+  {nombre === "agua" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M24 6 C30 16 36 22 36 30 A12 12 0 0 1 12 30 C12 22 18 16 24 6 Z" />
+    </svg>
+  )}
+  {nombre === "casa" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M8 22 L24 8 L40 22" />
+      <path d="M12 20 L12 40 L36 40 L36 20" />
+      <path d="M20 40 L20 28 L28 28 L28 40" opacity="0.6" />
+    </svg>
+  )}
+  {nombre === "ganado" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 16 C6 14 6 22 10 22" />
+      <path d="M38 16 C42 14 42 22 38 22" />
+      <path d="M10 18 C10 30 16 38 24 38 C32 38 38 30 38 18 C38 14 32 12 24 12 C16 12 10 14 10 18 Z" />
+      <path d="M20 24 h1 M27 24 h1" />
+    </svg>
+  )}
+  {nombre === "seta" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 24 C8 14 15 8 24 8 C33 8 40 14 40 24 Z" />
+      <path d="M20 24 C20 34 19 38 24 40 C29 38 28 34 28 24" />
+    </svg>
+  )}
+  {nombre === "trigo" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M24 42 L24 16" />
+      <path d="M24 16 C20 18 18 14 20 10 C24 12 26 14 24 16" />
+      <path d="M24 22 C20 24 17 20 19 16 M24 22 C28 24 31 20 29 16" opacity="0.7" />
+      <path d="M24 30 C20 32 17 28 19 24 M24 30 C28 32 31 28 29 24" opacity="0.5" />
+    </svg>
+  )}
+  {nombre === "piedra" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M6 30 L14 18 L24 24 L30 14 L42 26 L40 38 L8 38 Z" />
+      <path d="M14 18 L18 30 M30 14 L28 26" opacity="0.5" />
+    </svg>
+  )}
+  {nombre === "documento" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M12 6 L28 6 L36 14 L36 42 L12 42 Z" />
+      <path d="M28 6 L28 14 L36 14" />
+      <path d="M18 24 h12 M18 30 h12 M18 36 h8" opacity="0.6" />
+    </svg>
+  )}
+  {nombre === "columna" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M10 14 L38 14 M8 14 L24 6 L40 14" />
+      <path d="M14 14 L14 38 M24 14 L24 38 M34 14 L34 38" />
+      <path d="M8 38 L40 38 M10 42 L38 42" />
+    </svg>
+  )}
+  {nombre === "brujula" && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="24" cy="24" r="18" />
+      <path d="M24 12 L28 24 L24 36 L20 24 Z" />
+      <circle cx="24" cy="24" r="1.5" fill="currentColor" />
+    </svg>
+  )}
+</span>
+<style>
+  .icono { display: inline-flex; }
+  .icono svg { width: var(--s); height: var(--s); }
+</style>

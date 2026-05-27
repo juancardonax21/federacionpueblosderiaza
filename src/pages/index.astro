@@ -1,0 +1,225 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+const banner = {
+  activo: true,
+  texto: "Música a la luz de las velas · 1 de noviembre, El Muyo",
+  enlace: "/noticias/musica-a-la-luz-de-las-velas/",
+};
+
+const todas = (await getCollection("noticias")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const ultimas = todas.slice(0, 3);
+
+const fecha = (d) =>
+  d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+---
+
+<Base title="Federación Pueblos de Riaza" description="Comprometidos con el territorio. La voz de las asociaciones de la Sierra de Ayllón.">
+  {banner.activo && (
+    <a class="banner-evento" href={banner.enlace}>
+      <span class="banner-evento__et">Próximo evento</span>
+      <span class="banner-evento__tx">{banner.texto}</span>
+      <span class="banner-evento__fl">→</span>
+    </a>
+  )}
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__fondo">
+      <img src="/images/Esplendor-en-las-praderas-de-El-Muyo.jpg" alt="" />
+    </div>
+    <div class="hero__contenido contenedor-ancho">
+      <p class="ojillo ojillo--claro">Sierra de Ayllón · Tierra de Colores</p>
+      <h1 class="hero__titulo">Comprometidos<br />con el territorio</h1>
+      <p class="hero__entradilla">
+        Diez pueblos del nordeste de Segovia unidos para cuidar su patrimonio,
+        su paisaje y sus formas de vida. Esta es nuestra voz común.
+      </p>
+      <a class="boton boton--claro" href="/la-federacion/">Conoce la Federación</a>
+    </div>
+  </section>
+
+  <!-- TERRITORIO: gestión sostenible + arquitectura -->
+  <section class="contenedor-ancho intro">
+    <div class="intro__col">
+      <p class="ojillo">El territorio</p>
+      <p class="intro__lede">
+        La extensa superficie forestal y arbolada del territorio confiere al
+        paisaje una identidad única y de alto valor.
+      </p>
+    </div>
+    <div class="intro__col intro__doble">
+      <div>
+        <h3 class="intro__h">Gestión sostenible</h3>
+        <p>
+          Los valores paisajísticos de la Sierra de Ayllón constituyen un
+          entorno de alta calidad visual y ambiental, ligado a la gestión
+          sostenible del territorio y a la continuidad de las actividades
+          tradicionales: la ganadería extensiva, la agricultura de secano, la
+          silvicultura y el uso comunal del monte.
+        </p>
+      </div>
+      <div>
+        <h3 class="intro__h">Arquitectura tradicional</h3>
+        <p>
+          Los llamados pueblos amarillos, negros y rojos de la Sierra de Ayllón
+          son uno de los ejemplos más singulares y valiosos de arquitectura
+          tradicional de montaña en el centro peninsular.
+        </p>
+        <a class="enlace-flecha" href="/los-pueblos/">Conoce los Pueblos de Riaza →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- AL DÍA: solo 3 últimas -->
+  <section class="contenedor-ancho seccion-noticias">
+    <header class="seccion-cab">
+      <h2>Al día</h2>
+      <a class="seccion-cab__todas" href="/al-dia/">Ver todas →</a>
+    </header>
+    <div class="rejilla">
+      {ultimas.map((n) => (
+        <a class="tarjeta" href={`/noticias/${n.slug}/`}>
+          {n.data.cover ? (
+            <div class="tarjeta__img"><img src={n.data.cover} alt={n.data.title} /></div>
+          ) : (
+            <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
+          )}
+          <time class="meta">{fecha(n.data.date)}</time>
+          <h3 class="tarjeta__titulo">{n.data.title}</h3>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- INFORME DESCARGABLE -->
+  <section class="informe">
+    <div class="contenedor-ancho informe__inner">
+      <div class="informe__txt">
+        <p class="ojillo ojillo--ocre">Documento de posicionamiento</p>
+        <h2>Proyecto minero en la Sierra de Ayllón</h2>
+        <p>
+          Un análisis riguroso e independiente de los riesgos e implicaciones
+          del proyecto de investigación minera aprobado en un entorno de
+          altísimo valor ecológico, cultural y socioeconómico. Un trabajo
+          técnico, jurídico y estratégico para una decisión bien fundamentada.
+        </p>
+        <a class="boton boton--claro" href="/documentos/informe-proyecto-minero-sierra-ayllon.pdf" download>
+          Descargar el informe (PDF)
+        </a>
+      </div>
+      <div class="informe__icono" aria-hidden="true">
+        <span>PDF</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIERRA DE COLORES -->
+  <section class="territorio">
+    <div class="contenedor-ancho territorio__inner">
+      <div>
+        <p class="ojillo">Tierra de Colores</p>
+        <h2>Pueblos amarillos, negros y rojos</h2>
+        <p>
+          La piedra de la tierra —roja, negra, amarilla— da nombre a este
+          territorio único de la Sierra de Ayllón.
+        </p>
+        <a class="boton boton--linea" href="/los-pueblos/">Conoce los pueblos</a>
+      </div>
+      <ul class="territorio__lista">
+        <li><span style="--p: var(--c-rojo)"></span> Madriguera y Villacorta · piedra roja</li>
+        <li><span style="--p: var(--c-ocre)"></span> Alquité y Martín Muñoz · piedra amarilla</li>
+        <li><span style="--p: var(--c-tinta)"></span> El Muyo y Becerril · pizarra negra</li>
+        <li><span style="--p: var(--c-verde)"></span> El Negredo · entre pinares</li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Banner */
+  .banner-evento { display: flex; align-items: center; gap: 1rem; background: var(--c-tinta); color: var(--c-papel); padding: 0.85rem 1.5rem; font-size: 0.92rem; }
+  .banner-evento__et { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-ocre); font-weight: 600; white-space: nowrap; }
+  .banner-evento__tx { color: var(--c-papel); }
+  .banner-evento__fl { margin-left: auto; transition: transform 0.2s ease; }
+  .banner-evento:hover .banner-evento__fl { transform: translateX(4px); }
+
+  /* Hero */
+  .hero { position: relative; min-height: 78vh; display: flex; align-items: flex-end; overflow: hidden; }
+  .hero__fondo { position: absolute; inset: 0; z-index: 0; }
+  .hero__fondo img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__fondo::after {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(to top, rgba(20,18,15,0.88) 0%, rgba(20,18,15,0.55) 35%, rgba(20,18,15,0.2) 70%, rgba(20,18,15,0.3) 100%),
+      linear-gradient(to right, rgba(20,18,15,0.6) 0%, rgba(20,18,15,0.1) 55%, transparent 100%);
+  }
+  .hero__contenido { position: relative; z-index: 1; padding-block: 3.5rem 4.5rem; color: var(--c-papel); max-width: 42rem; }
+  .ojillo--claro { color: var(--c-ocre); }
+  .hero__titulo { font-size: clamp(2.8rem, 8vw, 6rem); margin: 0.8rem 0 0; font-weight: 400; color: var(--c-papel); text-shadow: 0 2px 24px rgba(0,0,0,0.4); }
+  .hero__entradilla { font-size: 1.3rem; line-height: 1.6; color: #fff; max-width: 34rem; margin: 1.6rem 0 2rem; text-shadow: 0 1px 16px rgba(0,0,0,0.6); }
+
+  /* Botones */
+  .boton { display: inline-block; background: var(--c-tinta); color: var(--c-papel); padding: 0.8rem 1.8rem; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; border-radius: var(--radio); transition: background 0.2s ease; }
+  .boton:hover { background: var(--acento); color: #fff; }
+  .boton--claro { background: var(--c-papel); color: var(--c-tinta); }
+  .boton--claro:hover { background: var(--c-ocre); color: var(--c-tinta); }
+  .boton--linea { background: transparent; color: var(--c-tinta); border: 1px solid var(--c-tinta); }
+  .boton--linea:hover { background: var(--c-tinta); color: var(--c-papel); }
+
+  /* Intro territorio (gestión + arquitectura) */
+  .intro { display: grid; grid-template-columns: 1fr 1.6fr; gap: 4rem; padding: 5rem 1.5rem 4rem; }
+  .intro__lede { font-family: var(--serif); font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.35; margin-top: 0.8rem; }
+  .intro__doble { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  .intro__h { font-size: 1.3rem; color: var(--c-rojo); margin-bottom: 0.6rem; }
+  .intro__doble p { color: var(--c-tinta-suave); }
+  .enlace-flecha { display: inline-block; margin-top: 0.8rem; color: var(--c-tinta); font-weight: 500; font-size: 0.95rem; border-bottom: 1px solid var(--c-borde); padding-bottom: 2px; }
+  .enlace-flecha:hover { color: var(--c-rojo); border-color: var(--c-rojo); }
+
+  /* Sección noticias */
+  .seccion-noticias { padding-bottom: 2rem; }
+  .seccion-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--c-borde); padding-bottom: 1rem; }
+  .seccion-cab h2 { font-size: 2rem; }
+  .seccion-cab__todas { font-size: 0.85rem; color: var(--c-rojo); font-weight: 500; white-space: nowrap; }
+  .meta { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-tenue); display: block; }
+  .rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem 2rem; }
+  .tarjeta__img { overflow: hidden; border-radius: 2px; aspect-ratio: 3/2; margin-bottom: 1rem; }
+  .tarjeta__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .tarjeta:hover .tarjeta__img img { transform: scale(1.04); }
+  .tarjeta__img--vacia { background: var(--c-crema); display: flex; align-items: center; justify-content: center; }
+  .tarjeta__img--vacia span { font-family: var(--serif); font-size: 1.5rem; color: var(--c-borde); letter-spacing: 0.1em; }
+  .tarjeta__titulo { font-size: 1.25rem; margin: 0.4rem 0 0; transition: color 0.2s ease; }
+  .tarjeta:hover .tarjeta__titulo { color: var(--c-rojo); }
+
+  /* Informe descargable */
+  .informe { background: var(--c-tinta); color: var(--c-papel); margin-top: 5rem; padding: 4.5rem 0; }
+  .informe__inner { display: grid; grid-template-columns: 1.7fr 1fr; gap: 3rem; align-items: center; }
+  .informe__txt h2 { color: var(--c-papel); margin: 0.5rem 0 1rem; font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
+  .informe__txt p { color: color-mix(in srgb, var(--c-papel) 78%, transparent); max-width: 38rem; margin-bottom: 1.8rem; }
+  .ojillo--ocre { color: var(--c-ocre); }
+  .informe__icono { display: flex; justify-content: center; }
+  .informe__icono span {
+    font-family: var(--serif); font-size: 1.5rem; letter-spacing: 0.1em;
+    border: 2px solid var(--c-ocre); color: var(--c-ocre);
+    width: 7rem; height: 9rem; display: flex; align-items: center; justify-content: center;
+    border-radius: 2px; transform: rotate(-4deg);
+  }
+
+  /* Tierra de colores */
+  .territorio { background: var(--c-crema); padding: 4.5rem 0; }
+  .territorio__inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
+  .territorio__inner h2 { margin: 0.4rem 0 0.8rem; }
+  .territorio__inner p { color: var(--c-tinta-suave); max-width: 30rem; }
+  .territorio__lista { list-style: none; margin: 0; padding: 0; }
+  .territorio__lista li { display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 0; border-bottom: 1px solid var(--c-borde); font-size: 1.02rem; }
+  .territorio__lista span { width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--p); flex-shrink: 0; }
+
+  @media (max-width: 860px) {
+    .intro, .intro__doble, .informe__inner, .territorio__inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .informe__icono { justify-content: flex-start; }
+    .rejilla { grid-template-columns: 1fr; }
+  }
+</style>

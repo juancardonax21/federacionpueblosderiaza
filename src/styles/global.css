@@ -1,0 +1,225 @@
+/* =========================================================================
+   Federación Pueblos de Riaza — estilos globales
+   Dirección: editorial, sobrio, mucho blanco. Tipografía protagonista.
+   Paleta extraída de la "Tierra de Colores" de la Sierra de Ayllón,
+   usada con moderación como acentos.
+   ========================================================================= */
+
+:root {
+  /* Neutros (la piedra caliza, el papel) */
+  --c-papel: #faf8f3;
+  --c-crema: #f3eee4;
+  --c-borde: #e3dccd;
+  --c-tinta: #23211d;        /* casi negro, los pueblos negros de El Muyo */
+  --c-tinta-suave: #5c574e;
+  --c-tenue: #8a8478;
+
+  /* Acentos: Tierra de Colores (extraídos del logo oficial) */
+  --c-rojo: #a03010;          /* terracota del logo · piedra roja de Madriguera */
+  --c-rojo-hondo: #7d2810;    /* variante oscura para hover */
+  --c-ocre: #e0a020;          /* dorado del logo · piedra amarilla de Alquité */
+  --c-verde: #4a5a3c;         /* monte y pinares de la Sierra */
+  --c-verde-hondo: #36462b;
+
+  --acento: var(--c-rojo);
+
+  /* Tipografía */
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Medidas */
+  --ancho-texto: 42rem;
+  --ancho-contenido: 68rem;
+  --ancho-ancho: 90rem;
+  --radio: 2px;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--c-papel);
+  color: var(--c-tinta);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  font-feature-settings: "kern", "liga";
+}
+
+/* --- Tipografía ---------------------------------------------------------- */
+
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--c-tinta);
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-optical-sizing: auto; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); }
+h3 { font-size: 1.35rem; }
+
+p { margin: 0 0 1.2em; }
+
+a {
+  color: var(--c-tinta);
+  text-decoration: none;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 0.2s ease;
+}
+.prosa a {
+  text-decoration: underline;
+  text-decoration-color: var(--c-borde);
+}
+.prosa a:hover { color: var(--acento); text-decoration-color: var(--acento); }
+
+strong { font-weight: 600; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* --- Estructura ---------------------------------------------------------- */
+
+.contenedor { width: 100%; max-width: var(--ancho-contenido); margin-inline: auto; padding-inline: clamp(1.5rem, 5vw, 4rem); }
+.contenedor-ancho { width: 100%; max-width: var(--ancho-ancho); margin-inline: auto; padding-inline: clamp(1.5rem, 5vw, 4rem); }
+.prosa { max-width: var(--ancho-texto); }
+
+/* --- Cabecera ------------------------------------------------------------ */
+
+.sitio-header {
+  border-bottom: 1px solid var(--c-borde);
+  background: color-mix(in srgb, var(--c-papel) 85%, transparent);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.sitio-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: 4.5rem;
+}
+.marca {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  display: flex;
+  flex-direction: column;
+}
+.marca small {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-tenue);
+  margin-top: 0.15rem;
+}
+.sitio-nav { display: flex; gap: 1.8rem; flex-wrap: wrap; }
+.sitio-nav a {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-tinta-suave);
+  position: relative;
+}
+.sitio-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -6px;
+  width: 0; height: 1px;
+  background: var(--acento);
+  transition: width 0.25s ease;
+}
+.sitio-nav a:hover { color: var(--c-tinta); }
+.sitio-nav a:hover::after { width: 100%; }
+
+/* --- Pie ----------------------------------------------------------------- */
+
+.sitio-footer {
+  margin-top: 6rem;
+  border-top: 1px solid var(--c-borde);
+  background: var(--c-crema);
+  padding-block: 3.5rem;
+}
+.sitio-footer__grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 2.5rem;
+}
+.sitio-footer h4 {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-tenue);
+  margin-bottom: 1rem;
+}
+.sitio-footer__marca { font-family: var(--serif); font-size: 1.4rem; line-height: 1.2; margin-bottom: 0.8rem; }
+.sitio-footer ul { list-style: none; margin: 0; padding: 0; }
+.sitio-footer li { margin-bottom: 0.5rem; }
+.sitio-footer a { color: var(--c-tinta-suave); font-size: 0.95rem; }
+.sitio-footer a:hover { color: var(--acento); }
+.sitio-footer__legal { margin-top: 2.5rem; font-size: 0.8rem; color: var(--c-tenue); }
+.sitio-footer__codinse {
+  margin-top: 1.2rem; font-size: 0.85rem; color: var(--c-tinta-suave); max-width: 24rem;
+  padding-top: 1rem; border-top: 1px solid var(--c-borde);
+}
+.sitio-footer__codinse a { color: var(--c-rojo); font-weight: 500; }
+.sitio-footer__codinse a:hover { text-decoration: underline; }
+
+/* --- Galería (del contenido migrado) ------------------------------------ */
+
+.galeria { margin: 2.5rem 0; }
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.6rem;
+}
+.galeria-grid a { display: block; overflow: hidden; border-radius: var(--radio); }
+.galeria-grid img {
+  width: 100%; height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform 0.5s ease, filter 0.5s ease;
+  filter: saturate(0.95);
+}
+.galeria-grid a:hover img { transform: scale(1.04); filter: saturate(1.1); }
+.galeria figcaption {
+  font-size: 0.85rem;
+  color: var(--c-tenue);
+  margin-top: 0.8rem;
+  font-style: italic;
+}
+
+/* --- Detalles ------------------------------------------------------------ */
+
+.ojillo {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--acento);
+  font-weight: 600;
+}
+.regla {
+  border: none;
+  border-top: 1px solid var(--c-borde);
+  margin: 3rem 0;
+}
+
+@media (max-width: 720px) {
+  .sitio-header__inner { flex-direction: column; align-items: flex-start; gap: 0.8rem; padding-block: 1rem; min-height: 0; }
+  .sitio-nav { gap: 1.2rem; }
+  .sitio-footer__grid { grid-template-columns: 1fr; gap: 2rem; }
+}

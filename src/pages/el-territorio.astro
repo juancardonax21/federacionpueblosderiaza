@@ -1,0 +1,145 @@
+---
+import Base from "../layouts/Base.astro";
+import Icono from "../components/Icono.astro";
+---
+
+<Base
+  title="El Territorio · Federación Pueblos de Riaza"
+  description="La Sierra de Ayllón: biodiversidad, hábitats protegidos, usos tradicionales y un paisaje de alto valor escénico y ambiental."
+>
+  <header class="apertura contenedor-ancho">
+    <p class="ojillo">El Territorio</p>
+    <h1 class="apertura__titulo">La Sierra de Ayllón</h1>
+    <p class="apertura__lede">
+      Un entorno de altísimo valor ecológico, donde el equilibrio entre los
+      usos humanos y la naturaleza ha configurado un paisaje de alta calidad
+      visual y ambiental, reconocido y protegido.
+    </p>
+  </header>
+
+  <figure class="portada contenedor-ancho">
+    <img src="/images/Esplendor-en-las-praderas-de-El-Muyo.jpg" alt="Praderas de la Sierra de Ayllón" />
+  </figure>
+
+  <!-- Naturaleza protegida -->
+  <section class="bloque">
+    <div class="contenedor-ancho bloque__grid">
+      <div class="bloque__cabe">
+        <p class="ojillo ojillo--verde">Naturaleza protegida</p>
+        <h2>Biodiversidad y hábitats</h2>
+      </div>
+      <div class="bloque__cuerpo prosa-col">
+        <p>
+          El territorio se solapa con el Lugar de Importancia Comunitaria y
+          Zona de Especial Conservación <strong>«Sierra de Ayllón»</strong>,
+          dentro de la <a href="https://www.miteco.gob.es/es/biodiversidad/temas/espacios-protegidos/red-natura-2000.html" target="_blank" rel="noopener" class="enlace-entidad">Red Natura 2000</a>. Alberga numerosos hábitats de interés
+          comunitario incluidos en la Directiva Hábitats.
+        </p>
+        <p>
+          Entre ellos, brezales secos europeos y oromediterráneos, formaciones
+          montanas, prados silíceos, hayedos acidófilos atlánticos, robledales,
+          bosques de ribera, encinas y acebo. Las zonas subestépicas de
+          gramíneas están catalogadas como <strong>hábitat prioritario</strong>,
+          uno de los sistemas más frágiles del conjunto.
+        </p>
+        <p>
+          Su fauna incluye especies protegidas como el lobo ibérico, el gato
+          montés, la nutria y el desmán ibérico; rapaces como el milano real,
+          el águila calzada y el búho real; y herpetofauna sensible como el
+          galápago europeo o el tritón jaspeado.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Usos tradicionales -->
+  <section class="bloque bloque--crema">
+    <div class="contenedor-ancho bloque__grid">
+      <div class="bloque__cabe">
+        <p class="ojillo ojillo--verde">Vida en el territorio</p>
+        <h2>Usos tradicionales</h2>
+      </div>
+      <div class="bloque__cuerpo">
+        <div class="usos">
+          <div class="uso">
+            <Icono nombre="ganado" size={36} />
+            <h3>Ganadería extensiva</h3>
+            <p>Eje económico y cultural en El Negredo, Madriguera, El Muyo, Villacorta o Becerril, sustentada en pastizales y eriales comunales que suponen más del 38% del territorio.</p>
+          </div>
+          <div class="uso">
+            <Icono nombre="seta" size={36} />
+            <h3>Micología</h3>
+            <p>Uno de los enclaves más ricos del centro peninsular para la recolección de boletus, amanita, cantharellus o morchella, regulada por acotados y de alto valor gastronómico.</p>
+          </div>
+          <div class="uso">
+            <Icono nombre="brujula" size={36} />
+            <h3>Actividad cinegética</h3>
+            <p>Caza mayor regulada de jabalí y corzo, integrada en los planes de ordenación del medio natural y desarrollada en cotos del término municipal.</p>
+          </div>
+          <div class="uso">
+            <Icono nombre="trigo" size={36} />
+            <h3>Agricultura de secano</h3>
+            <p>Ocupa un 18% del término, con cultivos de trigo, cebada, veza o colza que mantienen la estructura del paisaje agrario tradicional.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Paisaje -->
+  <section class="bloque bloque--oscuro">
+    <div class="contenedor-ancho">
+      <p class="ojillo ojillo--ocre">Un activo estratégico</p>
+      <p class="manifiesto">
+        El paisaje rural y forestal de la Sierra de Ayllón constituye uno de los
+        activos más relevantes del territorio: ambiental, social y económico.
+        Su extensa superficie arbolada le confiere una identidad única y un
+        alto valor escénico.
+      </p>
+      <p class="texto-claro">
+        Las Normas Urbanísticas Municipales han elevado el nivel de protección
+        de los valores naturales y paisajísticos, con medidas de protección de
+        vistas, adecuación de las construcciones en suelo rústico y conservación
+        de las bandas que rodean los cascos urbanos de los núcleos serranos.
+      </p>
+      <a class="boton boton--claro" href="/patrimonio/">Descubre el patrimonio →</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .apertura { padding: 5rem 1.5rem 2.5rem; max-width: 52rem; }
+  .apertura__titulo { font-size: clamp(2.6rem, 7vw, 5rem); margin: 0.8rem 0 0; }
+  .apertura__lede { font-family: var(--serif); font-style: italic; font-size: clamp(1.3rem, 2.5vw, 1.7rem); line-height: 1.5; color: var(--c-tinta-suave); margin-top: 1.6rem; }
+
+  .portada { aspect-ratio: 16/7; overflow: hidden; border-radius: 2px; margin: 1rem auto 0; }
+  .portada img { width: 100%; height: 100%; object-fit: cover; }
+
+  .bloque { padding: 5rem 0; }
+  .bloque--crema { background: var(--c-crema); }
+  .bloque--oscuro { background: var(--c-tinta); color: var(--c-papel); }
+  .bloque--oscuro .contenedor-ancho { max-width: 60rem; }
+  .bloque__grid { display: grid; grid-template-columns: 0.8fr 1.4fr; gap: 3.5rem; align-items: start; }
+  .ojillo--verde { color: var(--c-verde); }
+  .ojillo--ocre { color: var(--c-ocre); }
+  .bloque__cabe h2 { margin-top: 0.5rem; }
+  .prosa-col p { color: var(--c-tinta-suave); margin-bottom: 1.2rem; }
+  .prosa-col strong, .usos strong { color: var(--c-tinta); font-weight: 600; }
+  .enlace-entidad { color: var(--c-verde); font-weight: 600; text-decoration: underline; text-decoration-color: var(--c-borde); text-underline-offset: 3px; }
+  .enlace-entidad:hover { text-decoration-color: var(--c-verde); }
+
+  .usos { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .uso { color: var(--c-verde); }
+  .uso h3 { font-size: 1.2rem; color: var(--c-rojo); margin: 0.6rem 0 0.5rem; }
+  .uso p { color: var(--c-tinta-suave); font-size: 0.96rem; }
+
+  .manifiesto { font-family: var(--serif); font-size: clamp(1.7rem, 3.2vw, 2.6rem); line-height: 1.3; margin: 0.8rem 0 1.8rem; color: var(--c-papel); }
+  .texto-claro { color: color-mix(in srgb, var(--c-papel) 75%, transparent); max-width: 44rem; margin-bottom: 2rem; }
+  .boton { display: inline-block; padding: 0.8rem 1.8rem; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 2px; }
+  .boton--claro { background: var(--c-papel); color: var(--c-tinta); }
+  .boton--claro:hover { background: var(--c-ocre); }
+
+  @media (max-width: 860px) {
+    .bloque__grid, .usos { grid-template-columns: 1fr; gap: 2rem; }
+  }
+</style>

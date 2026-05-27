@@ -1,0 +1,199 @@
+---
+import Base from "../layouts/Base.astro";
+import Icono from "../components/Icono.astro";
+
+const materiales = [
+  { color: "var(--c-ocre)", titulo: "Cuarcitas amarillas", pueblos: "Alquité y Martín Muñoz de Ayllón", texto: "Mampostería de tono dorado que da nombre a los pueblos amarillos." },
+  { color: "var(--c-rojo)", titulo: "Piedra y revocos rojizos", pueblos: "Madriguera y Villacorta", texto: "El tono rojizo domina tanto en los muros como en los revocos." },
+  { color: "var(--c-tinta)", titulo: "Lajas de pizarra", pueblos: "Becerril, El Negredo y El Muyo", texto: "Pizarra negra, a veces combinada con cuarcitas blancas." },
+];
+---
+
+<Base
+  title="Patrimonio · Federación Pueblos de Riaza"
+  description="Arquitectura tradicional de montaña, patrimonio etnográfico y yacimientos de los pueblos de la Sierra de Ayllón."
+>
+  <header class="apertura contenedor-ancho">
+    <p class="ojillo">Patrimonio</p>
+    <h1 class="apertura__titulo">Arquitectura de<br />la tierra</h1>
+    <p class="apertura__lede">
+      Uno de los ejemplos más singulares y valiosos de arquitectura tradicional
+      de montaña del centro peninsular, donde los materiales locales y las
+      formas de vida históricas se funden en un paisaje cultural coherente.
+    </p>
+  </header>
+
+  <!-- Materiales por pueblo -->
+  <section class="bloque">
+    <div class="contenedor-ancho">
+      <div class="seccion-cab">
+        <p class="ojillo ojillo--rojo">Pueblos amarillos, rojos y negros</p>
+        <h2>La piedra que da nombre</h2>
+        <p class="intro-tx">
+          El carácter constructivo de cada núcleo está vinculado a su geología.
+          La singularidad de los materiales —pizarra, conglomerado ferruginoso,
+          cuarcitas doradas y blancas— configura los tres colores de la Sierra.
+        </p>
+      </div>
+      <div class="materiales">
+        {materiales.map((m) => (
+          <article class="material">
+            <span class="material__punto" style={`--p:${m.color}`}></span>
+            <h3>{m.titulo}</h3>
+            <p class="material__pueblos">{m.pueblos}</p>
+            <p>{m.texto}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Valor y protección -->
+  <section class="bloque bloque--crema">
+    <div class="contenedor-ancho bloque__grid">
+      <figure class="foto">
+        <img src="/images/Historia.jpg" alt="Arquitectura tradicional de la Sierra de Ayllón" />
+      </figure>
+      <div>
+        <p class="ojillo ojillo--rojo">Reconocimiento legal</p>
+        <h2>Un legado protegido</h2>
+        <p>
+          El conjunto está formado por los núcleos de Alquité, Martín Muñoz de
+          Ayllón, Villacorta, Becerril, Madriguera, Serracín, El Negredo y El
+          Muyo. Su valor radica en la persistencia casi inalterada de
+          construcciones y elementos domésticos tradicionales: cocinas,
+          chimeneas y hornos.
+        </p>
+        <p>
+          Este patrimonio está reconocido en el Catálogo Arqueológico Municipal
+          y protegido por la Ley 7/2024 de Patrimonio Cultural de Castilla y
+          León. Numerosos edificios cuentan con niveles de protección integral,
+          estructural o ambiental.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Elementos etnográficos -->
+  <section class="bloque">
+    <div class="contenedor-ancho bloque__grid bloque__grid--inv">
+      <div>
+        <p class="ojillo ojillo--rojo"><Icono nombre="casa" size={20} /> Arquitectura doméstica</p>
+        <h2>La vida en piedra</h2>
+        <p>
+          El valor del conjunto radica en la persistencia casi inalterada de
+          construcciones y elementos domésticos tradicionales. Cocinas de
+          campana, chimeneas troncocónicas, hornos de pan, fraguas, potros de
+          herrar y fuentes y abrevaderos comunales conforman un repertorio
+          etnográfico vivo, vinculado a las formas de vida históricas del
+          territorio.
+        </p>
+        <p>
+          Esta arquitectura popular no es un decorado: nació de la economía de
+          subsistencia, del aprovechamiento del monte y de la ganadería, y por
+          eso cada material y cada forma responden a una función. Conservarla es
+          conservar la memoria de cómo se ha habitado esta sierra durante
+          siglos.
+        </p>
+      </div>
+      <figure class="foto-sec">
+        <img src="/images/Piedras.jpg" alt="Detalle de construcción tradicional en piedra" />
+      </figure>
+    </div>
+  </section>
+
+  <!-- Yacimientos / arqueología -->
+  <section class="bloque bloque--oscuro">
+    <div class="contenedor-ancho">
+      <div class="yac-cabe">
+        <p class="ojillo ojillo--ocre"><Icono nombre="documento" size={20} /> Arqueología</p>
+        <h2>Bajo la tierra, la historia</h2>
+        <p class="yac-intro">
+          El territorio conserva yacimientos arqueológicos con protección
+          preventiva, testimonio de una ocupación humana que se remonta mucho
+          más allá de los actuales núcleos. Su existencia obliga a evaluar con
+          cautela cualquier actuación que pudiera afectarlos, directa o
+          indirectamente.
+        </p>
+      </div>
+
+      <div class="yac-grid">
+        <article class="yac-card">
+          <span class="yac-card__num">01</span>
+          <h3>Los Cimientos</h3>
+          <p>Yacimiento con protección preventiva, integrado en el Catálogo Arqueológico Municipal de Riaza.</p>
+        </article>
+        <article class="yac-card">
+          <span class="yac-card__num">02</span>
+          <h3>San Juan</h3>
+          <p>Enclave de interés arqueológico que refuerza el valor histórico del entorno de los pueblos serranos.</p>
+        </article>
+        <article class="yac-card">
+          <span class="yac-card__num">03</span>
+          <h3>El Paredón</h3>
+          <p>Yacimiento catalogado cuya protección debe garantizarse frente a cualquier intervención en el medio.</p>
+        </article>
+      </div>
+
+      <p class="yac-pie">
+        Todo este patrimonio —arquitectónico, etnográfico y arqueológico— está
+        reconocido en el Catálogo Arqueológico Municipal y amparado por la
+        <strong>Ley 7/2024 de Patrimonio Cultural de Castilla y León</strong>,
+        además de las Normas Urbanísticas Municipales, que catalogan numerosos
+        edificios con niveles de protección integral, estructural o ambiental.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .apertura { padding: 5rem 1.5rem 3rem; max-width: 52rem; }
+  .apertura__titulo { font-size: clamp(2.6rem, 7vw, 5rem); margin: 0.8rem 0 0; }
+  .apertura__lede { font-family: var(--serif); font-style: italic; font-size: clamp(1.3rem, 2.5vw, 1.7rem); line-height: 1.5; color: var(--c-tinta-suave); margin-top: 1.6rem; }
+
+  .bloque { padding: 4.5rem 0; }
+  .bloque--crema { background: var(--c-crema); }
+  .bloque--oscuro { background: var(--c-tinta); color: var(--c-papel); }
+  .ojillo--rojo { color: var(--c-rojo); }
+  .ojillo--ocre { color: var(--c-ocre); }
+
+  .seccion-cab { max-width: 44rem; margin-bottom: 3rem; }
+  .seccion-cab h2 { margin: 0.5rem 0 0.8rem; }
+  .intro-tx { color: var(--c-tinta-suave); }
+
+  .materiales { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+  .material { border-top: 2px solid var(--c-borde); padding-top: 1.2rem; }
+  .material__punto { width: 1rem; height: 1rem; border-radius: 50%; background: var(--p); display: block; margin-bottom: 1rem; }
+  .material h3 { font-size: 1.3rem; }
+  .material__pueblos { color: var(--c-rojo); font-size: 0.85rem; font-weight: 500; margin: 0.3rem 0 0.8rem; letter-spacing: 0.02em; }
+  .material p { color: var(--c-tinta-suave); font-size: 0.96rem; }
+
+  .bloque__grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3.5rem; align-items: center; }
+  .bloque__grid--inv { grid-template-columns: 1.2fr 1fr; }
+  .foto { aspect-ratio: 4/5; overflow: hidden; border-radius: 2px; }
+  .foto img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
+  .foto-sec { aspect-ratio: 4/3; overflow: hidden; border-radius: 2px; }
+  .foto-sec img { width: 100%; height: 100%; object-fit: cover; }
+  .bloque__grid h2 { margin: 0.4rem 0 1rem; }
+  .bloque__grid p { color: var(--c-tinta-suave); margin-bottom: 1.1rem; }
+  .ojillo .icono { vertical-align: -4px; margin-right: 0.3rem; }
+
+  /* Yacimientos enriquecidos (bloque oscuro) */
+  .yac-cabe { max-width: 46rem; margin-bottom: 3rem; }
+  .yac-cabe h2 { color: var(--c-papel); margin: 0.5rem 0 1rem; }
+  .yac-intro { color: color-mix(in srgb, var(--c-papel) 78%, transparent); }
+  .yac-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2.5rem; }
+  .yac-card { border-top: 2px solid color-mix(in srgb, var(--c-ocre) 60%, transparent); padding-top: 1.2rem; }
+  .yac-card__num { font-family: var(--serif); font-size: 1.6rem; color: var(--c-ocre); display: block; margin-bottom: 0.4rem; }
+  .yac-card h3 { color: var(--c-papel); font-size: 1.3rem; margin-bottom: 0.5rem; }
+  .yac-card p { color: color-mix(in srgb, var(--c-papel) 70%, transparent); font-size: 0.92rem; }
+  .yac-pie { color: color-mix(in srgb, var(--c-papel) 72%, transparent); max-width: 50rem; font-size: 0.98rem; }
+  .yac-pie strong { color: var(--c-papel); }
+
+  @media (max-width: 860px) {
+    .materiales { grid-template-columns: 1fr; gap: 1.5rem; }
+    .bloque__grid, .bloque__grid--inv, .yac-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .foto, .foto-sec { aspect-ratio: 3/2; }
+    .bloque__grid--inv .foto-sec { order: -1; }
+  }
+</style>

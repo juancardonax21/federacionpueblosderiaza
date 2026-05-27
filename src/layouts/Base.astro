@@ -1,0 +1,92 @@
+---
+import "../styles/global.css";
+import Logo from "../components/Logo.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+
+const nav = [
+  { href: "/la-federacion/", label: "La Federación" },
+  { href: "/el-territorio/", label: "El Territorio" },
+  { href: "/patrimonio/", label: "Patrimonio" },
+  { href: "/los-pueblos/", label: "Los Pueblos" },
+  { href: "/al-dia/", label: "Al día" },
+  { href: "/contacto/", label: "Contacto" },
+];
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="sitio-header">
+      <div class="contenedor-ancho sitio-header__inner">
+        <a href="/" class="marca">
+          <Logo variante="completo" />
+        </a>
+        <nav class="sitio-nav">
+          {nav.map((i) => <a href={i.href}>{i.label}</a>)}
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="sitio-footer">
+      <div class="contenedor-ancho">
+        <div class="sitio-footer__grid">
+          <div>
+            <div class="sitio-footer__marca"><Logo variante="completo" /></div>
+            <p style="color: var(--c-tinta-suave); font-size: 0.95rem; max-width: 24rem; margin-top: 1.4rem;">
+              La voz de nuestras asociaciones en la búsqueda de soluciones y
+              mejoras para la comarca.
+            </p>
+            <p class="sitio-footer__codinse">
+              Miembro de <a href="https://www.codinse.com" target="_blank" rel="noopener">CODINSE</a>,
+              Coordinadora para el Desarrollo Integral del Nordeste de Segovia.
+            </p>
+          </div>
+          <div>
+            <h4>Acerca de</h4>
+            <ul>
+              <li><a href="/la-federacion/">La Federación</a></li>
+              <li><a href="/los-pueblos/">Los Pueblos</a></li>
+              <li><a href="/las-asociaciones/">Las Asociaciones</a></li>
+              <li><a href="/contacto/">Contacto</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Dónde estamos</h4>
+            <p style="color: var(--c-tinta-suave); font-size: 0.95rem;">
+              Plaza de la Constitución, 1<br />
+              40510 Madriguera, Riaza (Segovia)<br />
+              <a href="mailto:info@federacionpueblosderiaza.org">info@federacionpueblosderiaza.org</a>
+            </p>
+          </div>
+        </div>
+        <div class="sitio-footer__legal">
+          © {year} Federación de Pueblos de Riaza ·
+          <a href="/politica-de-privacidad/">Política de privacidad</a> ·
+          <a href="/politica-privacidad/">Términos</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

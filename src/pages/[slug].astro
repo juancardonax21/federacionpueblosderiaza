@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import { pueblos } from "../data/pueblos";
+
+export async function getStaticPaths() {
+  const paginas = await getCollection("paginas");
+  // Slugs con plantilla propia: páginas a medida + todos los pueblos.
+  const propias = new Set([
+    "la-federacion", "los-pueblos",
+    ...pueblos.map((p) => p.slug),
+  ]);
+  return paginas
+    .filter((p) => !propias.has(p.slug))
+    .map((p) => ({ params: { slug: p.slug }, props: { pagina: p } }));
+}
+
+const { pagina } = Astro.props;
+const { Content } = await pagina.render();
+---
+
+<Base title={`${pagina.data.title} · Federación Pueblos de Riaza`}>
+  <article class="pagina">
+    <header class="pagina__cab contenedor">
+      <a class="volver" href="/">← Inicio</a>
+      <h1>{pagina.data.title}</h1>
+    </header>
+    <div class="pagina__cuerpo prosa contenedor">
+      <Content />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .pagina { padding-top: 3rem; }
+  .pagina__cab { text-align: center; max-width: 48rem; margin-bottom: 3rem; }
+  .volver { font-size: 0.85rem; color: var(--c-tenue); display: inline-block; margin-bottom: 1.5rem; }
+  .volver:hover { color: var(--acento); }
+  .pagina__cab h1 { font-size: clamp(2.4rem, 5vw, 4rem); }
+  .pagina__cuerpo { font-size: 1.12rem; }
+  .pagina__cuerpo :global(h2),
+  .pagina__cuerpo :global(h3) { margin-top: 2.4rem; }
+  /* En páginas índice (como Los Pueblos), los h3 con enlace funcionan como lista */
+  .pagina__cuerpo :global(h3) { font-size: 1.5rem; }
+  .pagina__cuerpo :global(img) { border-radius: var(--radio); margin: 2rem 0; }
+</style>
