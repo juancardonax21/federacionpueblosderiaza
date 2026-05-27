@@ -6,9 +6,14 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "migrar": "node scripts/migrar.mjs"
+    "migrar": "node scripts/migrar.mjs",
+    "migrar-noticias": "node scripts/migrar-noticias.mjs"
   },
   "dependencies": {
-    "astro": "^5.0.0"
+    "astro": "^5.0.0",
+    "@astrojs/vercel": "^8.0.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "marked": "^14.0.0",
+    "gray-matter": "^4.0.3"
   }
 }

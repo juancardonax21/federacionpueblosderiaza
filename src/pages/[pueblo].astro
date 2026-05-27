@@ -3,47 +3,34 @@ import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import Icono from "../components/Icono.astro";
 import { pueblos, getPueblo } from "../data/pueblos";
+import { getNoticiasDePueblo } from "../lib/supabase";
 
-export async function getStaticPaths() {
-  const paginas = await getCollection("paginas");
-  return pueblos.map((pb) => {
-    const pagina = paginas.find((p) => p.slug === pb.slug);
-    return { params: { pueblo: pb.slug }, props: { pb, pagina } };
-  });
+const { pueblo: slug } = Astro.params;
+const pb = getPueblo(slug);
+
+if (!pb) {
+  return Astro.redirect("/los-pueblos/");
 }
 
-const { pb, pagina } = Astro.props;
-const datos = getPueblo(pb.slug);
-
-// Texto migrado (si existe la página correspondiente)
+const paginas = await getCollection("paginas");
+const pagina = paginas.find((p) => p.slug === pb.slug);
 let Content = null;
 if (pagina) {
   const rendered = await pagina.render();
   Content = rendered.Content;
 }
 
-// Noticias relacionadas: detección por nombre del pueblo en título/descripción.
-const todas = (await getCollection("noticias")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
-const nombreNorm = pb.nombre.toLowerCase();
-const relacionadas = todas.filter((n) => {
-  const txt = `${n.data.title} ${n.data.description || ""}`.toLowerCase();
-  return txt.includes(nombreNorm);
-}).slice(0, 3);
+const relacionadas = (await getNoticiasDePueblo(pb.slug)).slice(0, 3);
 
 const fecha = (d) =>
-  d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+  new Date(d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 
-// Otros pueblos para navegar
-const otros = pueblos.filter((p) => p.slug !== pb.slug);
 const idx = pueblos.findIndex((p) => p.slug === pb.slug);
 const siguiente = pueblos[(idx + 1) % pueblos.length];
 ---
 
 <Base title={`${pb.nombre} · Pueblos de Riaza`} description={`${pb.nombre}, en la Sierra de Ayllón. ${pb.piedra}.`}>
   <article class="pueblo">
-    <!-- Cabecera con foto -->
     <header class="pb-hero">
       <div class="pb-hero__foto">
         <img src={pb.foto} alt={pb.nombre} />
@@ -56,12 +43,10 @@ const siguiente = pueblos[(idx + 1) % pueblos.length];
     </header>
 
     <div class="pb-cuerpo contenedor-ancho">
-      <!-- Texto principal -->
       <div class="pb-texto prosa">
         {Content ? <Content /> : <p>{pb.nombre} forma parte de la Federación de Pueblos de Riaza.</p>}
       </div>
 
-      <!-- Ficha técnica lateral -->
       <aside class="pb-ficha">
         <h2 class="pb-ficha__tit">Ficha</h2>
         <dl>
@@ -69,9 +54,6 @@ const siguiente = pueblos[(idx + 1) % pueblos.length];
             <dt><Icono nombre="piedra" size={18} /> Piedra</dt>
             <dd>{pb.piedra}</dd>
           </div>
-          {pb.altitud && (
-            <div class="pb-dato"><dt><Icono nombre="monte" size={18} /> Altitud</dt><dd>{pb.altitud}</dd></div>
-          )}
           {pb.habitantes && (
             <div class="pb-dato"><dt><Icono nombre="casa" size={18} /> Habitantes</dt><dd>{pb.habitantes}</dd></div>
           )}
@@ -87,33 +69,31 @@ const siguiente = pueblos[(idx + 1) % pueblos.length];
             <Icono nombre="brujula" size={18} /> Ver en el mapa
           </a>
         )}
-        {(!pb.altitud || !pb.habitantes || !pb.fiesta) && (
+        {(!pb.habitantes || !pb.fiesta) && (
           <p class="pb-pendiente">Ficha en ampliación.</p>
         )}
       </aside>
     </div>
 
-    <!-- Noticias relacionadas -->
     {relacionadas.length > 0 && (
       <section class="pb-noticias contenedor-ancho">
         <header class="seccion-cab"><h2>Noticias de {pb.nombre}</h2><span class="linea"></span></header>
         <div class="rejilla">
           {relacionadas.map((n) => (
             <a class="tarjeta" href={`/noticias/${n.slug}/`}>
-              {n.data.cover ? (
-                <div class="tarjeta__img"><img src={n.data.cover} alt={n.data.title} /></div>
+              {n.portada_url ? (
+                <div class="tarjeta__img"><img src={n.portada_url} alt={n.titulo} /></div>
               ) : (
                 <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
               )}
-              <time class="meta">{fecha(n.data.date)}</time>
-              <h3 class="tarjeta__titulo">{n.data.title}</h3>
+              <time class="meta">{fecha(n.fecha)}</time>
+              <h3 class="tarjeta__titulo">{n.titulo}</h3>
             </a>
           ))}
         </div>
       </section>
     )}
 
-    <!-- Navegación a otro pueblo -->
     <nav class="pb-siguiente contenedor-ancho">
       <a href={`/${siguiente.slug}/`}>
         <span class="meta">Siguiente pueblo</span>
@@ -134,11 +114,9 @@ const siguiente = pueblos[(idx + 1) % pueblos.length];
   .pb-piedra { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-papel); margin-bottom: 0.4rem; }
   .pb-punto { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--p); }
   .pb-hero__txt h1 { color: var(--c-papel); font-size: clamp(2.4rem, 6vw, 4.5rem); text-shadow: 0 2px 20px rgba(0,0,0,0.4); }
-
   .pb-cuerpo { display: grid; grid-template-columns: 1.6fr 1fr; gap: 3.5rem; padding-top: 3.5rem; align-items: start; }
   .pb-texto { font-size: 1.12rem; }
   .pb-texto :global(blockquote) { border-left: 2px solid var(--c-ocre); padding-left: 1.3rem; margin: 1.8rem 0; font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--c-tinta); }
-
   .pb-ficha { background: var(--c-crema); border-radius: 2px; padding: 1.8rem; position: sticky; top: 6rem; }
   .pb-ficha__tit { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-tenue); margin-bottom: 1.2rem; }
   .pb-ficha dl { margin: 0; }
@@ -150,7 +128,6 @@ const siguiente = pueblos[(idx + 1) % pueblos.length];
   .pb-maps:hover { background: var(--c-rojo); }
   .pb-maps :global(.icono) { color: var(--c-ocre); }
   .pb-pendiente { font-size: 0.8rem; color: var(--c-tenue); margin-top: 1rem; font-style: italic; }
-
   .pb-noticias { margin-top: 5rem; }
   .seccion-cab { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2rem; }
   .seccion-cab h2 { font-size: 1.8rem; }
@@ -164,11 +141,9 @@ const siguiente = pueblos[(idx + 1) % pueblos.length];
   .tarjeta__img--vacia span { font-family: var(--serif); font-size: 1.5rem; color: var(--c-borde); letter-spacing: 0.1em; }
   .tarjeta__titulo { font-size: 1.2rem; margin: 0.4rem 0 0; transition: color 0.2s ease; }
   .tarjeta:hover .tarjeta__titulo { color: var(--c-rojo); }
-
   .pb-siguiente { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--c-borde); }
   .pb-siguiente__n { font-family: var(--serif); font-size: 1.6rem; transition: color 0.2s ease; display: block; margin-top: 0.3rem; }
   .pb-siguiente a:hover .pb-siguiente__n { color: var(--c-rojo); }
-
   @media (max-width: 860px) {
     .pb-cuerpo { grid-template-columns: 1fr; }
     .pb-ficha { position: static; }

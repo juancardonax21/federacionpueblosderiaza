@@ -3,19 +3,24 @@ import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { pueblos } from "../data/pueblos";
 
-export async function getStaticPaths() {
-  const paginas = await getCollection("paginas");
-  // Slugs con plantilla propia: páginas a medida + todos los pueblos.
-  const propias = new Set([
-    "la-federacion", "los-pueblos",
-    ...pueblos.map((p) => p.slug),
-  ]);
-  return paginas
-    .filter((p) => !propias.has(p.slug))
-    .map((p) => ({ params: { slug: p.slug }, props: { pagina: p } }));
+const { slug } = Astro.params;
+
+const propias = new Set([
+  "la-federacion", "los-pueblos",
+  ...pueblos.map((p) => p.slug),
+]);
+
+if (propias.has(slug)) {
+  return Astro.redirect("/");
 }
 
-const { pagina } = Astro.props;
+const paginas = await getCollection("paginas");
+const pagina = paginas.find((p) => p.slug === slug);
+
+if (!pagina) {
+  return Astro.redirect("/");
+}
+
 const { Content } = await pagina.render();
 ---
 
@@ -40,7 +45,6 @@ const { Content } = await pagina.render();
   .pagina__cuerpo { font-size: 1.12rem; }
   .pagina__cuerpo :global(h2),
   .pagina__cuerpo :global(h3) { margin-top: 2.4rem; }
-  /* En páginas índice (como Los Pueblos), los h3 con enlace funcionan como lista */
   .pagina__cuerpo :global(h3) { font-size: 1.5rem; }
   .pagina__cuerpo :global(img) { border-radius: var(--radio); margin: 2rem 0; }
 </style>

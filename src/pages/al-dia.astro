@@ -1,15 +1,13 @@
 ---
-import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
+import { getNoticias } from "../lib/supabase";
 
-const todas = (await getCollection("noticias")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const todas = await getNoticias();
 const destacada = todas[0];
 const resto = todas.slice(1);
 
 const fecha = (d) =>
-  d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+  new Date(d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 ---
 
 <Base title="Al día · Federación Pueblos de Riaza" description="Noticias, eventos y actividades de los pueblos de la Sierra de Ayllón.">
@@ -24,14 +22,14 @@ const fecha = (d) =>
 
   {destacada && (
     <a class="aldia-dest contenedor-ancho" href={`/noticias/${destacada.slug}/`}>
-      {destacada.data.cover && (
-        <div class="aldia-dest__img"><img src={destacada.data.cover} alt={destacada.data.title} /></div>
+      {destacada.portada_url && (
+        <div class="aldia-dest__img"><img src={destacada.portada_url} alt={destacada.titulo} /></div>
       )}
       <div class="aldia-dest__txt">
         <span class="ojillo ojillo--rojo">Lo último</span>
-        <time class="meta">{fecha(destacada.data.date)}</time>
-        <h2>{destacada.data.title}</h2>
-        {destacada.data.description && <p>{destacada.data.description}</p>}
+        <time class="meta">{fecha(destacada.fecha)}</time>
+        <h2>{destacada.titulo}</h2>
+        {destacada.entradilla && <p>{destacada.entradilla}</p>}
         <span class="leer">Leer más →</span>
       </div>
     </a>
@@ -41,14 +39,14 @@ const fecha = (d) =>
     <div class="rejilla">
       {resto.map((n) => (
         <a class="tarjeta" href={`/noticias/${n.slug}/`}>
-          {n.data.cover ? (
-            <div class="tarjeta__img"><img src={n.data.cover} alt={n.data.title} /></div>
+          {n.portada_url ? (
+            <div class="tarjeta__img"><img src={n.portada_url} alt={n.titulo} /></div>
           ) : (
             <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
           )}
-          <time class="meta">{fecha(n.data.date)}</time>
-          <h3 class="tarjeta__titulo">{n.data.title}</h3>
-          {n.data.description && <p class="tarjeta__desc">{n.data.description}</p>}
+          <time class="meta">{fecha(n.fecha)}</time>
+          <h3 class="tarjeta__titulo">{n.titulo}</h3>
+          {n.entradilla && <p class="tarjeta__desc">{n.entradilla}</p>}
         </a>
       ))}
     </div>
@@ -58,17 +56,9 @@ const fecha = (d) =>
 <style>
   .aldia-cab { padding: 4rem 1.5rem 2.5rem; max-width: 52rem; }
   .aldia-cab h1 { font-size: clamp(2.8rem, 7vw, 5rem); margin: 0.6rem 0 0; }
-  .aldia-cab__lede {
-    font-family: var(--serif); font-style: italic; font-size: 1.3rem;
-    color: var(--c-tinta-suave); margin-top: 1.2rem; max-width: 38rem;
-  }
+  .aldia-cab__lede { font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--c-tinta-suave); margin-top: 1.2rem; max-width: 38rem; }
   .ojillo--rojo { color: var(--c-rojo); }
-
-  /* Destacada */
-  .aldia-dest {
-    display: grid; grid-template-columns: 1.4fr 1fr; gap: 2.5rem; align-items: center;
-    padding-bottom: 3.5rem; margin-bottom: 3.5rem; border-bottom: 1px solid var(--c-borde);
-  }
+  .aldia-dest { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2.5rem; align-items: center; padding-bottom: 3.5rem; margin-bottom: 3.5rem; border-bottom: 1px solid var(--c-borde); }
   .aldia-dest__img { aspect-ratio: 3/2; overflow: hidden; border-radius: 2px; }
   .aldia-dest__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
   .aldia-dest:hover .aldia-dest__img img { transform: scale(1.03); }
@@ -76,8 +66,6 @@ const fecha = (d) =>
   .aldia-dest__txt h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
   .aldia-dest__txt p { color: var(--c-tinta-suave); margin: 0.6rem 0 0.8rem; }
   .leer { color: var(--c-rojo); font-size: 0.9rem; font-weight: 500; }
-
-  /* Lista */
   .aldia-lista { padding-bottom: 2rem; }
   .rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem 2rem; }
   .tarjeta__img { overflow: hidden; border-radius: 2px; aspect-ratio: 3/2; margin-bottom: 1rem; }
@@ -88,11 +76,6 @@ const fecha = (d) =>
   .tarjeta__titulo { font-size: 1.3rem; margin: 0.4rem 0 0.4rem; transition: color 0.2s ease; }
   .tarjeta:hover .tarjeta__titulo { color: var(--c-rojo); }
   .tarjeta__desc { font-size: 0.92rem; color: var(--c-tinta-suave); line-height: 1.6; }
-
-  @media (max-width: 860px) {
-    .aldia-dest { grid-template-columns: 1fr; }
-    .aldia-dest__img { order: -1; }
-    .rejilla { grid-template-columns: repeat(2, 1fr); }
-  }
+  @media (max-width: 860px) { .aldia-dest { grid-template-columns: 1fr; } .aldia-dest__img { order: -1; } .rejilla { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 540px) { .rejilla { grid-template-columns: 1fr; } }
 </style>

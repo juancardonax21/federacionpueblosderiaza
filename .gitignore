@@ -1,5 +1,23 @@
+# Dependencias
 node_modules/
+
+# Build
 dist/
 .astro/
 .vercel/
+.output/
+
+# Variables de entorno (claves secretas)
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Sistema
 .DS_Store
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/

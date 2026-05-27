@@ -1,6 +1,6 @@
 ---
-import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
+import { getNoticias } from "../lib/supabase";
 
 const banner = {
   activo: true,
@@ -8,13 +8,10 @@ const banner = {
   enlace: "/noticias/musica-a-la-luz-de-las-velas/",
 };
 
-const todas = (await getCollection("noticias")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
-const ultimas = todas.slice(0, 3);
+const ultimas = await getNoticias(3);
 
 const fecha = (d) =>
-  d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+  new Date(d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 ---
 
 <Base title="Federación Pueblos de Riaza" description="Comprometidos con el territorio. La voz de las asociaciones de la Sierra de Ayllón.">
@@ -26,7 +23,6 @@ const fecha = (d) =>
     </a>
   )}
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero__fondo">
       <img src="/images/Esplendor-en-las-praderas-de-El-Muyo.jpg" alt="" />
@@ -42,7 +38,6 @@ const fecha = (d) =>
     </div>
   </section>
 
-  <!-- TERRITORIO: gestión sostenible + arquitectura -->
   <section class="contenedor-ancho intro">
     <div class="intro__col">
       <p class="ojillo">El territorio</p>
@@ -74,7 +69,6 @@ const fecha = (d) =>
     </div>
   </section>
 
-  <!-- AL DÍA: solo 3 últimas -->
   <section class="contenedor-ancho seccion-noticias">
     <header class="seccion-cab">
       <h2>Al día</h2>
@@ -83,19 +77,18 @@ const fecha = (d) =>
     <div class="rejilla">
       {ultimas.map((n) => (
         <a class="tarjeta" href={`/noticias/${n.slug}/`}>
-          {n.data.cover ? (
-            <div class="tarjeta__img"><img src={n.data.cover} alt={n.data.title} /></div>
+          {n.portada_url ? (
+            <div class="tarjeta__img"><img src={n.portada_url} alt={n.titulo} /></div>
           ) : (
             <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
           )}
-          <time class="meta">{fecha(n.data.date)}</time>
-          <h3 class="tarjeta__titulo">{n.data.title}</h3>
+          <time class="meta">{fecha(n.fecha)}</time>
+          <h3 class="tarjeta__titulo">{n.titulo}</h3>
         </a>
       ))}
     </div>
   </section>
 
-  <!-- INFORME DESCARGABLE -->
   <section class="informe">
     <div class="contenedor-ancho informe__inner">
       <div class="informe__txt">
@@ -117,7 +110,6 @@ const fecha = (d) =>
     </div>
   </section>
 
-  <!-- TIERRA DE COLORES -->
   <section class="territorio">
     <div class="contenedor-ancho territorio__inner">
       <div>
@@ -140,14 +132,11 @@ const fecha = (d) =>
 </Base>
 
 <style>
-  /* Banner */
   .banner-evento { display: flex; align-items: center; gap: 1rem; background: var(--c-tinta); color: var(--c-papel); padding: 0.85rem 1.5rem; font-size: 0.92rem; }
   .banner-evento__et { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-ocre); font-weight: 600; white-space: nowrap; }
   .banner-evento__tx { color: var(--c-papel); }
   .banner-evento__fl { margin-left: auto; transition: transform 0.2s ease; }
   .banner-evento:hover .banner-evento__fl { transform: translateX(4px); }
-
-  /* Hero */
   .hero { position: relative; min-height: 78vh; display: flex; align-items: flex-end; overflow: hidden; }
   .hero__fondo { position: absolute; inset: 0; z-index: 0; }
   .hero__fondo img { width: 100%; height: 100%; object-fit: cover; }
@@ -161,16 +150,12 @@ const fecha = (d) =>
   .ojillo--claro { color: var(--c-ocre); }
   .hero__titulo { font-size: clamp(2.8rem, 8vw, 6rem); margin: 0.8rem 0 0; font-weight: 400; color: var(--c-papel); text-shadow: 0 2px 24px rgba(0,0,0,0.4); }
   .hero__entradilla { font-size: 1.3rem; line-height: 1.6; color: #fff; max-width: 34rem; margin: 1.6rem 0 2rem; text-shadow: 0 1px 16px rgba(0,0,0,0.6); }
-
-  /* Botones */
   .boton { display: inline-block; background: var(--c-tinta); color: var(--c-papel); padding: 0.8rem 1.8rem; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; border-radius: var(--radio); transition: background 0.2s ease; }
   .boton:hover { background: var(--acento); color: #fff; }
   .boton--claro { background: var(--c-papel); color: var(--c-tinta); }
   .boton--claro:hover { background: var(--c-ocre); color: var(--c-tinta); }
   .boton--linea { background: transparent; color: var(--c-tinta); border: 1px solid var(--c-tinta); }
   .boton--linea:hover { background: var(--c-tinta); color: var(--c-papel); }
-
-  /* Intro territorio (gestión + arquitectura) */
   .intro { display: grid; grid-template-columns: 1fr 1.6fr; gap: 4rem; padding: 5rem 1.5rem 4rem; }
   .intro__lede { font-family: var(--serif); font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.35; margin-top: 0.8rem; }
   .intro__doble { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
@@ -178,8 +163,6 @@ const fecha = (d) =>
   .intro__doble p { color: var(--c-tinta-suave); }
   .enlace-flecha { display: inline-block; margin-top: 0.8rem; color: var(--c-tinta); font-weight: 500; font-size: 0.95rem; border-bottom: 1px solid var(--c-borde); padding-bottom: 2px; }
   .enlace-flecha:hover { color: var(--c-rojo); border-color: var(--c-rojo); }
-
-  /* Sección noticias */
   .seccion-noticias { padding-bottom: 2rem; }
   .seccion-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--c-borde); padding-bottom: 1rem; }
   .seccion-cab h2 { font-size: 2rem; }
@@ -193,8 +176,6 @@ const fecha = (d) =>
   .tarjeta__img--vacia span { font-family: var(--serif); font-size: 1.5rem; color: var(--c-borde); letter-spacing: 0.1em; }
   .tarjeta__titulo { font-size: 1.25rem; margin: 0.4rem 0 0; transition: color 0.2s ease; }
   .tarjeta:hover .tarjeta__titulo { color: var(--c-rojo); }
-
-  /* Informe descargable */
   .informe { background: var(--c-tinta); color: var(--c-papel); margin-top: 5rem; padding: 4.5rem 0; }
   .informe__inner { display: grid; grid-template-columns: 1.7fr 1fr; gap: 3rem; align-items: center; }
   .informe__txt h2 { color: var(--c-papel); margin: 0.5rem 0 1rem; font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
@@ -207,8 +188,6 @@ const fecha = (d) =>
     width: 7rem; height: 9rem; display: flex; align-items: center; justify-content: center;
     border-radius: 2px; transform: rotate(-4deg);
   }
-
-  /* Tierra de colores */
   .territorio { background: var(--c-crema); padding: 4.5rem 0; }
   .territorio__inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
   .territorio__inner h2 { margin: 0.4rem 0 0.8rem; }
@@ -216,7 +195,6 @@ const fecha = (d) =>
   .territorio__lista { list-style: none; margin: 0; padding: 0; }
   .territorio__lista li { display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 0; border-bottom: 1px solid var(--c-borde); font-size: 1.02rem; }
   .territorio__lista span { width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--p); flex-shrink: 0; }
-
   @media (max-width: 860px) {
     .intro, .intro__doble, .informe__inner, .territorio__inner { grid-template-columns: 1fr; gap: 2.5rem; }
     .informe__icono { justify-content: flex-start; }
