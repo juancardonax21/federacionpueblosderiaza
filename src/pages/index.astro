@@ -104,8 +104,10 @@ const fecha = (d) =>
           Descargar el informe (PDF)
         </a>
       </div>
-      <div class="informe__icono" aria-hidden="true">
-        <span>PDF</span>
+      <div class="informe__icono">
+        <a href="/documentos/informe-proyecto-minero-sierra-ayllon.pdf" download>
+          <img src="/images/minas.jpg" alt="Portada del informe sobre el proyecto minero en la Sierra de Ayllón" />
+        </a>
       </div>
     </div>
   </section>
@@ -182,11 +184,12 @@ const fecha = (d) =>
   .informe__txt p { color: color-mix(in srgb, var(--c-papel) 78%, transparent); max-width: 38rem; margin-bottom: 1.8rem; }
   .ojillo--ocre { color: var(--c-ocre); }
   .informe__icono { display: flex; justify-content: center; }
-  .informe__icono span {
-    font-family: var(--serif); font-size: 1.5rem; letter-spacing: 0.1em;
-    border: 2px solid var(--c-ocre); color: var(--c-ocre);
-    width: 7rem; height: 9rem; display: flex; align-items: center; justify-content: center;
-    border-radius: 2px; transform: rotate(-4deg);
+  .informe__icono a { display: block; transition: transform 0.3s ease; }
+  .informe__icono a:hover { transform: translateY(-4px) rotate(2deg); }
+  .informe__icono img {
+    width: clamp(8rem, 14vw, 10rem); height: auto; display: block;
+    border-radius: 2px; box-shadow: 0 14px 36px rgba(0,0,0,0.4);
+    transform: rotate(3deg);
   }
   .territorio { background: var(--c-crema); padding: 4.5rem 0; }
   .territorio__inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }

@@ -42,8 +42,20 @@ const year = new Date().getFullYear();
         <nav class="sitio-nav">
           {nav.map((i) => <a href={i.href}>{i.label}</a>)}
         </nav>
+        <button class="hamburguesa" id="abrir-menu" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </header>
+
+    <div class="menu-movil" id="menu-movil" aria-hidden="true">
+      <button class="menu-movil__cerrar" id="cerrar-menu" aria-label="Cerrar menú">
+        <span></span><span></span>
+      </button>
+      <nav class="menu-movil__nav">
+        {nav.map((i) => <a href={i.href}>{i.label}</a>)}
+      </nav>
+    </div>
 
     <main>
       <slot />
@@ -67,8 +79,10 @@ const year = new Date().getFullYear();
             <h4>Acerca de</h4>
             <ul>
               <li><a href="/la-federacion/">La Federación</a></li>
+              <li><a href="/el-territorio/">El Territorio</a></li>
+              <li><a href="/patrimonio/">Patrimonio</a></li>
               <li><a href="/los-pueblos/">Los Pueblos</a></li>
-              <li><a href="/las-asociaciones/">Las Asociaciones</a></li>
+              <li><a href="/al-dia/">Al día</a></li>
               <li><a href="/contacto/">Contacto</a></li>
             </ul>
           </div>
@@ -88,5 +102,30 @@ const year = new Date().getFullYear();
         </div>
       </div>
     </footer>
+    <script>
+      const abrir = document.getElementById("abrir-menu");
+      const cerrar = document.getElementById("cerrar-menu");
+      const menu = document.getElementById("menu-movil");
+
+      function abrirMenu() {
+        menu.classList.add("menu-movil--abierto");
+        menu.setAttribute("aria-hidden", "false");
+        abrir.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden";
+      }
+      function cerrarMenu() {
+        menu.classList.remove("menu-movil--abierto");
+        menu.setAttribute("aria-hidden", "true");
+        abrir.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+      }
+
+      abrir?.addEventListener("click", abrirMenu);
+      cerrar?.addEventListener("click", cerrarMenu);
+      // Cerrar al pulsar cualquier enlace del menú
+      menu?.querySelectorAll("a").forEach((a) => a.addEventListener("click", cerrarMenu));
+      // Cerrar con tecla Escape
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") cerrarMenu(); });
+    </script>
   </body>
 </html>
