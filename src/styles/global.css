@@ -223,3 +223,6 @@ img { max-width: 100%; height: auto; display: block; }
   .sitio-nav { gap: 1.2rem; }
   .sitio-footer__grid { grid-template-columns: 1fr; gap: 2rem; }
 }
+
+main { margin-bottom: 0; }
+.sitio-footer { margin-top: 0; }

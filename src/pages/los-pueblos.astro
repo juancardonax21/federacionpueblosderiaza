@@ -1,20 +1,22 @@
 ---
 import Base from "../layouts/Base.astro";
-import { pueblos as pueblosData } from "../data/pueblos";
+import { getPueblos } from "../lib/supabase";
 
-// Los diez pueblos, con el color de su piedra y una breve descripción.
-const pueblos = [
-  { slug: "aldeanueva-del-monte", nombre: "Aldeanueva del Monte", color: "var(--c-ocre)", desc: "El pueblo más meridional de la Sierra de Ayllón, conserva intacta su esencia serrana." },
-  { slug: "alquite", nombre: "Alquité", color: "var(--c-ocre)", desc: "La piedra amarilla de sus muros y la madera de sus balcones hablan de siglos de historia compartida." },
-  { slug: "barahona-de-fresno", nombre: "Barahona de Fresno", color: "var(--c-verde)", desc: "Un pequeño oasis de vida rural entre campos de cultivo, colinas suaves y cielos amplios." },
-  { slug: "becerril", nombre: "Becerril", color: "var(--c-tinta)", desc: "Con vistas privilegiadas sobre la campiña del nordeste segoviano y un pasado ganadero." },
-  { slug: "el-muyo", nombre: "El Muyo", color: "var(--c-tinta)", desc: "Su seña de identidad es inconfundible: las casas construidas íntegramente con piedra negra." },
-  { slug: "el-negredo", nombre: "El Negredo", color: "var(--c-verde)", desc: "Un remanso de serenidad rodeado de pinares, pastos y caminos que invitan a la calma." },
-  { slug: "madriguera", nombre: "Madriguera", color: "var(--c-rojo)", desc: "Uno de los pueblos más reconocibles por sus casas de piedra roja, símbolo de la arquitectura tradicional." },
-  { slug: "martin-munoz-de-ayllon", nombre: "Martín Muñoz de Ayllón", color: "var(--c-ocre)", desc: "Encantador, escondido entre valles y caminos antiguos que conservan la esencia del mundo rural." },
-  { slug: "serracin", nombre: "Serracín", color: "var(--c-tinta)", desc: "Situado en una ladera que mira al horizonte, sus casas de piedra y madera se agrupan al abrigo del monte." },
-  { slug: "villacorta", nombre: "Villacorta", color: "var(--c-rojo)", desc: "La piedra roja domina sus muros y revocos. Se incorpora a la Federación con la Asociación San Roque." },
-];
+const pueblos = await getPueblos();
+
+// Descripciones breves (texto editorial, no en BBDD por ahora)
+const descripciones = {
+  "aldeanueva-del-monte": "El pueblo más meridional de la Sierra de Ayllón, conserva intacta su esencia serrana.",
+  "alquite": "La piedra amarilla de sus muros y la madera de sus balcones hablan de siglos de historia compartida.",
+  "barahona-de-fresno": "Un pequeño oasis de vida rural entre campos de cultivo, colinas suaves y cielos amplios.",
+  "becerril": "Con vistas privilegiadas sobre la campiña del nordeste segoviano y un pasado ganadero.",
+  "el-muyo": "Su seña de identidad es inconfundible: las casas construidas íntegramente con piedra negra.",
+  "el-negredo": "Un remanso de serenidad rodeado de pinares, pastos y caminos que invitan a la calma.",
+  "madriguera": "Uno de los pueblos más reconocibles por sus casas de piedra roja, símbolo de la arquitectura tradicional.",
+  "martin-munoz-de-ayllon": "Encantador, escondido entre valles y caminos antiguos que conservan la esencia del mundo rural.",
+  "serracin": "Situado en una ladera que mira al horizonte, sus casas de piedra y madera se agrupan al abrigo del monte.",
+  "villacorta": "La piedra roja domina sus muros y revocos. Se incorpora a la Federación con la Asociación San Roque.",
+};
 ---
 
 <Base title="Los Pueblos de Riaza · Federación" description="Los diez pueblos de la Sierra de Ayllón: la Tierra de Colores del nordeste de Segovia.">
@@ -28,17 +30,11 @@ const pueblos = [
     </p>
   </header>
 
-  <!-- Mapa del territorio con puntos clicables -->
   <section class="contenedor-ancho mapa-seccion">
     <div class="mapa">
       <img src="/images/mapa-territorio.png" alt="Mapa del territorio de la Federación de Pueblos de Riaza" class="mapa__img" />
-      {pueblosData.map((p) => (
-        <a
-          class="mapa__punto"
-          href={`/${p.slug}/`}
-          style={`left:${p.mapaX}%; top:${p.mapaY}%; --p:${p.color}`}
-          aria-label={p.nombre}
-        >
+      {pueblos.map((p) => (
+        <a class="mapa__punto" href={`/${p.slug}/`} style={`left:${p.mapa_x}%; top:${p.mapa_y}%; --p:${p.color}`} aria-label={p.nombre}>
           <span class="mapa__dot"></span>
           <span class="mapa__tip">{p.nombre}</span>
         </a>
@@ -52,7 +48,7 @@ const pueblos = [
       <a class="pueblo" href={`/${p.slug}/`}>
         <span class="pueblo__punto" style={`--p:${p.color}`}></span>
         <h2 class="pueblo__nombre">{p.nombre}</h2>
-        <p class="pueblo__desc">{p.desc}</p>
+        <p class="pueblo__desc">{descripciones[p.slug] || p.piedra}</p>
         <span class="pueblo__mas">Conocer más →</span>
       </a>
     ))}
@@ -64,36 +60,16 @@ const pueblos = [
   .apertura__titulo { font-size: clamp(2.6rem, 7vw, 5rem); margin: 0.8rem 0 0; }
   .apertura__lede { font-family: var(--serif); font-style: italic; font-size: clamp(1.3rem, 2.5vw, 1.7rem); line-height: 1.5; color: var(--c-tinta-suave); margin-top: 1.6rem; }
 
-  /* Mapa interactivo */
   .mapa-seccion { padding-bottom: 3.5rem; }
   .mapa { position: relative; border-radius: 3px; overflow: hidden; border: 1px solid var(--c-borde); line-height: 0; }
   .mapa__img { width: 100%; height: auto; display: block; }
-  .mapa__punto {
-    position: absolute; transform: translate(-50%, -50%);
-    display: flex; align-items: center; gap: 0.4rem;
-    line-height: 1; z-index: 2;
-  }
-  .mapa__dot {
-    width: 0.85rem; height: 0.85rem; border-radius: 50%;
-    background: var(--p); border: 2px solid var(--c-papel);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.3); flex-shrink: 0;
-    transition: transform 0.2s ease;
-  }
-  .mapa__tip {
-    position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%) translateY(4px);
-    font-size: 0.72rem; font-weight: 600; color: var(--c-papel);
-    background: var(--c-tinta); padding: 0.2rem 0.5rem; border-radius: 2px;
-    opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease;
-    white-space: nowrap; pointer-events: none;
-  }
+  .mapa__punto { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; line-height: 1; z-index: 2; }
+  .mapa__dot { width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--p); border: 2px solid var(--c-papel); box-shadow: 0 1px 4px rgba(0,0,0,0.3); flex-shrink: 0; transition: transform 0.2s ease; }
+  .mapa__tip { position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%) translateY(4px); font-size: 0.72rem; font-weight: 600; color: var(--c-papel); background: var(--c-tinta); padding: 0.2rem 0.5rem; border-radius: 2px; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; white-space: nowrap; pointer-events: none; }
   .mapa__punto:hover { z-index: 5; }
   .mapa__punto:hover .mapa__dot { transform: scale(1.4); }
   .mapa__punto:hover .mapa__tip { opacity: 1; transform: translateX(-50%) translateY(0); }
   .mapa__nota { font-size: 0.85rem; color: var(--c-tenue); margin-top: 1rem; font-style: italic; }
-
-  @media (max-width: 640px) {
-    .mapa__dot { width: 0.6rem; height: 0.6rem; }
-  }
 
   .pueblos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem 2rem; padding-bottom: 3rem; }
   .pueblo { border-top: 2px solid var(--c-borde); padding-top: 1.3rem; transition: border-color 0.25s ease; display: block; }
@@ -103,6 +79,6 @@ const pueblos = [
   .pueblo__desc { color: var(--c-tinta-suave); font-size: 0.96rem; margin-bottom: 0.9rem; }
   .pueblo__mas { font-size: 0.85rem; color: var(--c-rojo); font-weight: 500; }
 
-  @media (max-width: 860px) { .pueblos { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 860px) { .pueblos { grid-template-columns: 1fr 1fr; } .mapa__dot { width: 0.6rem; height: 0.6rem; } }
   @media (max-width: 540px) { .pueblos { grid-template-columns: 1fr; } }
 </style>

@@ -1,10 +1,12 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
-import { pueblos } from "../data/pueblos";
+import { getPueblos } from "../lib/supabase";
 
 const { slug } = Astro.params;
 
+// Slugs con plantilla propia (no se sirven desde aquí).
+const pueblos = await getPueblos();
 const propias = new Set([
   "la-federacion", "los-pueblos",
   ...pueblos.map((p) => p.slug),

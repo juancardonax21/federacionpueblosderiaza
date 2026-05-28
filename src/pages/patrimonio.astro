@@ -14,16 +14,20 @@ const materiales = [
   description="Arquitectura tradicional de montaña, patrimonio etnográfico y yacimientos de los pueblos de la Sierra de Ayllón."
 >
   <header class="apertura contenedor-ancho">
-    <p class="ojillo">Patrimonio</p>
-    <h1 class="apertura__titulo">Arquitectura de<br />la tierra</h1>
-    <p class="apertura__lede">
-      Uno de los ejemplos más singulares y valiosos de arquitectura tradicional
-      de montaña del centro peninsular, donde los materiales locales y las
-      formas de vida históricas se funden en un paisaje cultural coherente.
-    </p>
+    <div class="apertura__ilus">
+      <img src="/images/patrimonio.png" alt="Portada románica, ilustración" />
+    </div>
+    <div class="apertura__txt">
+      <p class="ojillo">Patrimonio</p>
+      <h1 class="apertura__titulo">Arquitectura de<br />la tierra</h1>
+      <p class="apertura__lede">
+        Uno de los ejemplos más singulares y valiosos de arquitectura tradicional
+        de montaña del centro peninsular, donde los materiales locales y las
+        formas de vida históricas se funden en un paisaje cultural coherente.
+      </p>
+    </div>
   </header>
 
-  <!-- Materiales por pueblo -->
   <section class="bloque">
     <div class="contenedor-ancho">
       <div class="seccion-cab">
@@ -48,7 +52,6 @@ const materiales = [
     </div>
   </section>
 
-  <!-- Valor y protección -->
   <section class="bloque bloque--crema">
     <div class="contenedor-ancho bloque__grid">
       <figure class="foto">
@@ -58,7 +61,7 @@ const materiales = [
         <p class="ojillo ojillo--rojo">Reconocimiento legal</p>
         <h2>Un legado protegido</h2>
         <p>
-          El conjunto está formado por los núcleos de Alquité, Martín Muñoz de
+          El conjunto está formado por los núcleos de Aldeanueva del Monte, Barahona de Fresno, Alquité, Martín Muñoz de
           Ayllón, Villacorta, Becerril, Madriguera, Serracín, El Negredo y El
           Muyo. Su valor radica en la persistencia casi inalterada de
           construcciones y elementos domésticos tradicionales: cocinas,
@@ -74,7 +77,6 @@ const materiales = [
     </div>
   </section>
 
-  <!-- Elementos etnográficos -->
   <section class="bloque">
     <div class="contenedor-ancho bloque__grid bloque__grid--inv">
       <div>
@@ -102,7 +104,6 @@ const materiales = [
     </div>
   </section>
 
-  <!-- Yacimientos / arqueología -->
   <section class="bloque bloque--oscuro">
     <div class="contenedor-ancho">
       <div class="yac-cabe">
@@ -116,7 +117,6 @@ const materiales = [
           indirectamente.
         </p>
       </div>
-
       <div class="yac-grid">
         <article class="yac-card">
           <span class="yac-card__num">01</span>
@@ -134,7 +134,6 @@ const materiales = [
           <p>Yacimiento catalogado cuya protección debe garantizarse frente a cualquier intervención en el medio.</p>
         </article>
       </div>
-
       <p class="yac-pie">
         Todo este patrimonio —arquitectónico, etnográfico y arqueológico— está
         reconocido en el Catálogo Arqueológico Municipal y amparado por la
@@ -147,9 +146,15 @@ const materiales = [
 </Base>
 
 <style>
-  .apertura { padding: 5rem 1.5rem 3rem; max-width: 52rem; }
+  .apertura { display: grid; grid-template-columns: auto 1fr; gap: 2.5rem; align-items: start; padding: 4rem 1.5rem 3rem; max-width: 60rem; }
+  .apertura__ilus { flex-shrink: 0; }
+  .apertura__ilus img { width: clamp(8rem, 16vw, 12rem); height: auto; display: block; }
   .apertura__titulo { font-size: clamp(2.6rem, 7vw, 5rem); margin: 0.8rem 0 0; }
   .apertura__lede { font-family: var(--serif); font-style: italic; font-size: clamp(1.3rem, 2.5vw, 1.7rem); line-height: 1.5; color: var(--c-tinta-suave); margin-top: 1.6rem; }
+  @media (max-width: 700px) {
+    .apertura { grid-template-columns: 1fr; gap: 1.5rem; }
+    .apertura__ilus img { width: 9rem; }
+  }
 
   .bloque { padding: 4.5rem 0; }
   .bloque--crema { background: var(--c-crema); }
@@ -178,7 +183,6 @@ const materiales = [
   .bloque__grid p { color: var(--c-tinta-suave); margin-bottom: 1.1rem; }
   .ojillo .icono { vertical-align: -4px; margin-right: 0.3rem; }
 
-  /* Yacimientos enriquecidos (bloque oscuro) */
   .yac-cabe { max-width: 46rem; margin-bottom: 3rem; }
   .yac-cabe h2 { color: var(--c-papel); margin: 0.5rem 0 1rem; }
   .yac-intro { color: color-mix(in srgb, var(--c-papel) 78%, transparent); }
