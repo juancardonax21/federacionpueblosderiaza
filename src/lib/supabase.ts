@@ -133,6 +133,15 @@ export async function getEvento(slug) {
   return data;
 }
 
+// Todos los eventos publicados (incluidos pasados). Para el feed /al-dia.
+export async function getTodosEventos() {
+  const { data, error } = await supabase
+    .from("eventos").select("*")
+    .eq("publicado", true).order("fecha_inicio", { ascending: false });
+  if (error) { console.error("Error eventos:", error.message); return []; }
+  return data || [];
+}
+
 // Evento destacado para el banner de la home. Solo si está vigente.
 export async function getEventoDestacado() {
   const hoy = hoyISO();

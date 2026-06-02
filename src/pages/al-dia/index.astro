@@ -1,10 +1,35 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { getNoticias } from "../../lib/supabase";
+import { getNoticias, getTodosEventos } from "../../lib/supabase";
 
-const todas = await getNoticias();
-const destacada = todas[0];
-const resto = todas.slice(1);
+const noticias = await getNoticias();
+const eventos = await getTodosEventos();
+
+// Mezclamos noticias y eventos en un solo feed, normalizando los campos
+// que nos hacen falta para renderizar la tarjeta.
+const items = [
+  ...noticias.map((n) => ({
+    tipo: "noticia",
+    fecha: n.fecha,
+    slug: n.slug,
+    titulo: n.titulo,
+    entradilla: n.entradilla,
+    imagen: n.portada_url,
+    url: `/noticias/${n.slug}/`,
+  })),
+  ...eventos.map((e) => ({
+    tipo: "evento",
+    fecha: e.fecha_inicio,
+    slug: e.slug,
+    titulo: e.titulo,
+    entradilla: e.descripcion ? e.descripcion.split("\n")[0].replace(/[#*]/g, "").trim().slice(0, 180) : null,
+    imagen: e.cartel_url,
+    url: `/eventos/${e.slug}/`,
+  })),
+].sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
+
+const destacada = items[0];
+const resto = items.slice(1);
 
 const fecha = (d) =>
   new Date(d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
@@ -12,24 +37,22 @@ const fecha = (d) =>
 
 <Base title="Al día · Federación Pueblos de Riaza" description="Noticias, eventos y actividades de los pueblos de la Sierra de Ayllón.">
   <header class="aldia-cab contenedor-ancho">
-    <h1>Noticias</h1>
+    <h1>Al día</h1>
     <p class="aldia-cab__lede">
-      Todo lo que pasa en nuestros pueblos: fiestas, encuentros, convocatorias
-      y la vida cultural de la comarca.
+      Todo lo que pasa en nuestros pueblos: noticias, eventos, fiestas y
+      la vida cultural de la comarca.
     </p>
-    <nav class="aldia-tabs">
-      <a href="/al-dia/" class="aldia-tabs--activa">Noticias</a>
-      <a href="/al-dia/eventos/">Eventos</a>
-    </nav>
   </header>
 
   {destacada && (
-    <a class="aldia-dest contenedor-ancho" href={`/noticias/${destacada.slug}/`}>
-      {destacada.portada_url && (
-        <div class="aldia-dest__img"><img src={destacada.portada_url} alt={destacada.titulo} /></div>
+    <a class="aldia-dest contenedor-ancho" href={destacada.url}>
+      {destacada.imagen && (
+        <div class="aldia-dest__img"><img src={destacada.imagen} alt={destacada.titulo} /></div>
       )}
       <div class="aldia-dest__txt">
-        <span class="ojillo ojillo--rojo">Lo último</span>
+        <span class={`ojillo ${destacada.tipo === "evento" ? "ojillo--evento" : "ojillo--rojo"}`}>
+          {destacada.tipo === "evento" ? "Evento" : "Lo último"}
+        </span>
         <time class="meta">{fecha(destacada.fecha)}</time>
         <h2>{destacada.titulo}</h2>
         {destacada.entradilla && <p>{destacada.entradilla}</p>}
@@ -40,16 +63,19 @@ const fecha = (d) =>
 
   <section class="contenedor-ancho aldia-lista">
     <div class="rejilla">
-      {resto.map((n) => (
-        <a class="tarjeta" href={`/noticias/${n.slug}/`}>
-          {n.portada_url ? (
-            <div class="tarjeta__img"><img src={n.portada_url} alt={n.titulo} /></div>
+      {resto.map((it) => (
+        <a class="tarjeta" href={it.url}>
+          {it.imagen ? (
+            <div class="tarjeta__img"><img src={it.imagen} alt={it.titulo} /></div>
           ) : (
             <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
           )}
-          <time class="meta">{fecha(n.fecha)}</time>
-          <h3 class="tarjeta__titulo">{n.titulo}</h3>
-          {n.entradilla && <p class="tarjeta__desc">{n.entradilla}</p>}
+          <span class={`tarjeta__etiqueta tarjeta__etiqueta--${it.tipo}`}>
+            {it.tipo === "evento" ? "Evento" : "Noticia"}
+          </span>
+          <time class="meta">{fecha(it.fecha)}</time>
+          <h3 class="tarjeta__titulo">{it.titulo}</h3>
+          {it.entradilla && <p class="tarjeta__desc">{it.entradilla}</p>}
         </a>
       ))}
     </div>
@@ -65,6 +91,11 @@ const fecha = (d) =>
   .aldia-tabs a:hover { color: var(--c-tinta); }
   .aldia-tabs--activa { color: var(--c-rojo) !important; border-bottom-color: var(--c-rojo) !important; }
   .ojillo--rojo { color: var(--c-rojo); }
+  .ojillo--evento { color: var(--c-ocre); }
+  .tarjeta { position: relative; }
+  .tarjeta__etiqueta { display: inline-block; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 2px; margin-bottom: 0.5rem; }
+  .tarjeta__etiqueta--noticia { background: transparent; color: var(--c-tenue); padding-left: 0; }
+  .tarjeta__etiqueta--evento { background: var(--c-ocre); color: var(--c-papel); }
   .aldia-dest { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2.5rem; align-items: center; padding-bottom: 3.5rem; margin-bottom: 3.5rem; border-bottom: 1px solid var(--c-borde); }
   .aldia-dest__img { aspect-ratio: 3/2; overflow: hidden; border-radius: 2px; }
   .aldia-dest__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }

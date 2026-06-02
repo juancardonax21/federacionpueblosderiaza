@@ -7,7 +7,7 @@ const { slug } = Astro.params;
 const evento = await getEvento(slug);
 
 if (!evento) {
-  return Astro.redirect("/al-dia/eventos/");
+  return Astro.redirect("/al-dia/");
 }
 
 const descripcionHtml = evento.descripcion ? marked.parse(evento.descripcion) : "";
@@ -35,7 +35,7 @@ const otros = (await getEventos()).filter((e) => e.slug !== slug).slice(0, 3);
 <Base title={`${evento.titulo} · Federación Pueblos de Riaza`} description={evento.descripcion || evento.titulo} image={evento.cartel_url}>
   <article class="evento">
     <header class="evento__cab contenedor">
-      <a class="volver" href="/al-dia/eventos/">← Agenda</a>
+      <a class="volver" href="/al-dia/">← Al día</a>
     </header>
 
     <div class="evento__principal contenedor-ancho">
