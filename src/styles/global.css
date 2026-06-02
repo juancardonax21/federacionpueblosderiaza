@@ -267,3 +267,7 @@ img { max-width: 100%; height: auto; display: block; }
   .sitio-header__inner { flex-direction: row; align-items: center; }
   .sitio-footer__grid { grid-template-columns: 1fr; gap: 2rem; }
 }
+
+/* Eliminar el margen blanco entre la última sección y el pie */
+main { margin-bottom: 0; }
+.sitio-footer { margin-top: 0; }
