@@ -168,7 +168,9 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .sitio-footer__marca { font-family: var(--serif); font-size: 1.4rem; line-height: 1.2; margin-bottom: 0.8rem; }
 .sitio-footer ul { list-style: none; margin: 0; padding: 0; }
-.sitio-footer li { margin-bottom: 0.5rem; }
+.sitio-footer li { padding: 0.55rem 0; position: relative; }
+.sitio-footer li::after { content: ""; position: absolute; bottom: 0; left: 0; width: 50%; height: 1px; background: var(--c-rojo); }
+.sitio-footer li:last-child::after { display: none; }
 .sitio-footer a { color: var(--c-tinta-suave); font-size: 0.95rem; }
 .sitio-footer a:hover { color: var(--acento); }
 .sitio-footer__legal { margin-top: 2.5rem; font-size: 0.8rem; color: var(--c-tenue); }
