@@ -1,6 +1,6 @@
 ---
-import Base from "../layouts/Base.astro";
-import { getNoticias } from "../lib/supabase";
+import Base from "../../layouts/Base.astro";
+import { getNoticias } from "../../lib/supabase";
 
 const todas = await getNoticias();
 const destacada = todas[0];
@@ -12,12 +12,16 @@ const fecha = (d) =>
 
 <Base title="Al día · Federación Pueblos de Riaza" description="Noticias, eventos y actividades de los pueblos de la Sierra de Ayllón.">
   <header class="aldia-cab contenedor-ancho">
-    <p class="ojillo">Noticias y actividades</p>
-    <h1>Al día</h1>
+    <p class="ojillo">Al día</p>
+    <h1>Noticias</h1>
     <p class="aldia-cab__lede">
       Todo lo que pasa en nuestros pueblos: fiestas, encuentros, convocatorias
       y la vida cultural de la comarca.
     </p>
+    <nav class="aldia-tabs">
+      <a href="/al-dia/" class="aldia-tabs--activa">Noticias</a>
+      <a href="/al-dia/eventos/">Eventos</a>
+    </nav>
   </header>
 
   {destacada && (
@@ -57,6 +61,10 @@ const fecha = (d) =>
   .aldia-cab { padding: 4rem 1.5rem 2.5rem; max-width: 52rem; }
   .aldia-cab h1 { font-size: clamp(2.8rem, 7vw, 5rem); margin: 0.6rem 0 0; }
   .aldia-cab__lede { font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--c-tinta-suave); margin-top: 1.2rem; max-width: 38rem; }
+  .aldia-tabs { display: flex; gap: 1.6rem; margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--c-borde); }
+  .aldia-tabs a { font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-tenue); padding-bottom: 0.5rem; border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
+  .aldia-tabs a:hover { color: var(--c-tinta); }
+  .aldia-tabs--activa { color: var(--c-rojo) !important; border-bottom-color: var(--c-rojo) !important; }
   .ojillo--rojo { color: var(--c-rojo); }
   .aldia-dest { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2.5rem; align-items: center; padding-bottom: 3.5rem; margin-bottom: 3.5rem; border-bottom: 1px solid var(--c-borde); }
   .aldia-dest__img { aspect-ratio: 3/2; overflow: hidden; border-radius: 2px; }

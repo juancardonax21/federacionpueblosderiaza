@@ -1,13 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
-import { getNoticias } from "../lib/supabase";
+import { getNoticias, getEventoDestacado } from "../lib/supabase";
 
-const banner = {
-  activo: true,
-  texto: "Música a la luz de las velas · 1 de noviembre, El Muyo",
-  enlace: "/noticias/musica-a-la-luz-de-las-velas/",
-};
-
+const destacado = await getEventoDestacado();
 const ultimas = await getNoticias(3);
 
 const fecha = (d) =>
@@ -15,10 +10,10 @@ const fecha = (d) =>
 ---
 
 <Base title="Federación Pueblos de Riaza" description="Comprometidos con el territorio. La voz de las asociaciones de la Sierra de Ayllón.">
-  {banner.activo && (
-    <a class="banner-evento" href={banner.enlace}>
+  {destacado && (
+    <a class="banner-evento" href={`/eventos/${destacado.slug}/`}>
       <span class="banner-evento__et">Próximo evento</span>
-      <span class="banner-evento__tx">{banner.texto}</span>
+      <span class="banner-evento__tx">{destacado.titulo}{destacado.lugar ? ` · ${destacado.lugar}` : ""}</span>
       <span class="banner-evento__fl">→</span>
     </a>
   )}
@@ -185,11 +180,10 @@ const fecha = (d) =>
   .ojillo--ocre { color: var(--c-ocre); }
   .informe__icono { display: flex; justify-content: center; }
   .informe__icono a { display: block; transition: transform 0.3s ease; }
-  .informe__icono a:hover { transform: translateY(-4px) rotate(2deg); }
+  .informe__icono a:hover { transform: translateY(-4px); }
   .informe__icono img {
-    width: clamp(8rem, 14vw, 10rem); height: auto; display: block;
-    border-radius: 2px; box-shadow: 0 14px 36px rgba(0,0,0,0.4);
-    transform: rotate(3deg);
+    width: clamp(11rem, 20vw, 15rem); height: auto; display: block;
+    border-radius: 2px; box-shadow: 0 12px 32px rgba(0,0,0,0.35);
   }
   .territorio { background: var(--c-crema); padding: 4.5rem 0; }
   .territorio__inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
