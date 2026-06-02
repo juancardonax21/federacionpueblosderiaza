@@ -160,10 +160,9 @@ export async function getEventosDePueblo(puebloSlug) {
   const { data: rels } = await supabase.from("eventos_pueblos").select("evento_id").eq("pueblo_id", pueblo.id);
   if (!rels || rels.length === 0) return [];
   const ids = rels.map((r) => r.evento_id);
-  const hoy = hoyISO();
   const { data, error } = await supabase
     .from("eventos").select("*")
-    .in("id", ids).eq("publicado", true).order("fecha_inicio");
+    .in("id", ids).eq("publicado", true).order("fecha_inicio", { ascending: false });
   if (error) return [];
-  return (data || []).filter((e) => (e.fecha_fin || e.fecha_inicio) >= hoy);
+  return data || [];
 }

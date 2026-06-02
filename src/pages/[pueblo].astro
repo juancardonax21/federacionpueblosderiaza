@@ -107,7 +107,7 @@ const siguiente = todos[(idx + 1) % todos.length];
 
     {eventosPueblo.length > 0 && (
       <section class="pb-eventos contenedor-ancho">
-        <header class="seccion-cab"><h2>Próximos eventos en {pb.nombre}</h2><span class="linea"></span></header>
+        <header class="seccion-cab"><h2>Eventos en {pb.nombre}</h2><span class="linea"></span></header>
         <div class="rejilla">
           {eventosPueblo.map((e) => (
             <a class="tarjeta" href={`/eventos/${e.slug}/`}>
