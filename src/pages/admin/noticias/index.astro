@@ -1,0 +1,251 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { Pencil, Star, Eye, EyeOff, Copy, Trash2 } from "@lucide/astro";
+---
+
+<Base title="Noticias · Panel Federación" description="Gestión de noticias">
+  <section class="adm contenedor-ancho">
+    <nav class="adm-migas">
+      <a href="/admin/">Panel</a>
+      <span class="adm-migas-sep">›</span>
+      <span class="adm-migas-actual">Noticias</span>
+    </nav>
+
+    <header class="adm-cab">
+      <h1>Noticias</h1>
+      <a href="/admin/noticias/nueva/" class="adm-nuevo">+ Nueva noticia</a>
+    </header>
+
+    <nav class="adm-tabs" id="tabs">
+      <button data-filtro="todas" class="adm-tab adm-tab-activo">Todas <span class="adm-cnt" id="c-todas"></span></button>
+      <button data-filtro="publicadas" class="adm-tab">Publicadas <span class="adm-cnt" id="c-publicadas"></span></button>
+      <button data-filtro="borradores" class="adm-tab">Borradores <span class="adm-cnt" id="c-borradores"></span></button>
+      <button data-filtro="destacadas" class="adm-tab">Destacadas <span class="adm-cnt" id="c-destacadas"></span></button>
+    </nav>
+
+    <div id="tabla-noticias" class="adm-tabla-wrap">
+      <p class="adm-cargando">Cargando noticias...</p>
+    </div>
+
+    <template id="icon-pencil"><Pencil size={16} /></template>
+    <template id="icon-star-filled"><Star size={16} fill="currentColor" /></template>
+    <template id="icon-star-empty"><Star size={16} /></template>
+    <template id="icon-eye"><Eye size={16} /></template>
+    <template id="icon-eye-off"><EyeOff size={16} /></template>
+    <template id="icon-copy"><Copy size={16} /></template>
+    <template id="icon-trash"><Trash2 size={16} /></template>
+  </section>
+</Base>
+
+<script>
+  import { createClient } from "@supabase/supabase-js";
+
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  );
+
+  const { data: sess } = await supabase.auth.getSession();
+  if (!sess?.session) window.location.href = "/admin/login/";
+
+  const contenedor = document.getElementById("tabla-noticias");
+  let todasLasNoticias = [];
+  let filtroActual = "todas";
+
+  const iconos = {
+    pencil: document.getElementById("icon-pencil").innerHTML,
+    starFilled: document.getElementById("icon-star-filled").innerHTML,
+    starEmpty: document.getElementById("icon-star-empty").innerHTML,
+    eye: document.getElementById("icon-eye").innerHTML,
+    eyeOff: document.getElementById("icon-eye-off").innerHTML,
+    copy: document.getElementById("icon-copy").innerHTML,
+    trash: document.getElementById("icon-trash").innerHTML,
+  };
+
+  async function cargar() {
+    const { data, error } = await supabase.from("noticias").select("*").order("fecha", { ascending: false });
+    if (error) {
+      contenedor.innerHTML = `<p class="adm-error">Error al cargar: ${error.message}</p>`;
+      return;
+    }
+    todasLasNoticias = data || [];
+    actualizarContadores();
+    render();
+  }
+
+  function filtrar(lista, filtro) {
+    if (filtro === "publicadas") return lista.filter((n) => n.publicada);
+    if (filtro === "borradores") return lista.filter((n) => !n.publicada);
+    if (filtro === "destacadas") return lista.filter((n) => n.destacada);
+    return lista;
+  }
+
+  function actualizarContadores() {
+    document.getElementById("c-todas").textContent = todasLasNoticias.length;
+    document.getElementById("c-publicadas").textContent = filtrar(todasLasNoticias, "publicadas").length;
+    document.getElementById("c-borradores").textContent = filtrar(todasLasNoticias, "borradores").length;
+    document.getElementById("c-destacadas").textContent = filtrar(todasLasNoticias, "destacadas").length;
+  }
+
+  function formatearFecha(f) {
+    return new Date(f).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" });
+  }
+
+  function escapar(s) {
+    return String(s || "").replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function render() {
+    const lista = filtrar(todasLasNoticias, filtroActual);
+    if (lista.length === 0) {
+      contenedor.innerHTML = `<p class="adm-vacio">No hay noticias en este filtro.</p>`;
+      return;
+    }
+    const filas = lista.map((n) => `
+      <tr data-id="${n.id}">
+        <td class="adm-col-titulo">
+          <div class="adm-titulo-wrap">
+            <a href="/admin/noticias/${n.id}/editar/" class="adm-titulo-link">${escapar(n.titulo)}</a>
+            <div class="adm-titulo-meta">
+              <span class="adm-slug">/noticias/${escapar(n.slug)}/</span>
+              ${n.destacada ? '<span class="adm-mini-badge adm-mini-badge-dest">Destacada</span>' : ''}
+              ${!n.publicada ? '<span class="adm-mini-badge adm-mini-badge-bor">Borrador</span>' : ''}
+            </div>
+          </div>
+        </td>
+        <td class="adm-col-fecha">${formatearFecha(n.fecha)}</td>
+        <td class="adm-col-acc">
+          <a href="/admin/noticias/${n.id}/editar/" class="adm-acc" title="Editar">${iconos.pencil}</a>
+          <button class="adm-acc" data-accion="destacar" title="${n.destacada ? 'Quitar destaque' : 'Destacar'}">${n.destacada ? iconos.starFilled : iconos.starEmpty}</button>
+          <button class="adm-acc" data-accion="despublicar" title="${n.publicada ? 'Despublicar' : 'Publicar'}">${n.publicada ? iconos.eye : iconos.eyeOff}</button>
+          <button class="adm-acc" data-accion="duplicar" title="Duplicar">${iconos.copy}</button>
+          <button class="adm-acc adm-acc-danger" data-accion="borrar" title="Borrar definitivamente">${iconos.trash}</button>
+        </td>
+      </tr>
+    `).join("");
+    contenedor.innerHTML = `
+      <table class="adm-tabla">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th class="adm-col-fecha">Fecha</th>
+            <th class="adm-col-acc">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>${filas}</tbody>
+      </table>
+    `;
+    engancharAcciones();
+  }
+
+  function engancharAcciones() {
+    contenedor.querySelectorAll("button[data-accion]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const fila = btn.closest("tr");
+        const id = fila.dataset.id;
+        const accion = btn.dataset.accion;
+        const noticia = todasLasNoticias.find((n) => n.id === id);
+        if (accion === "duplicar") await duplicar(noticia);
+        else if (accion === "destacar") await toggleDestacada(noticia);
+        else if (accion === "despublicar") await togglePublicada(noticia);
+        else if (accion === "borrar") await borrar(noticia);
+      });
+    });
+  }
+
+  async function toggleDestacada(noticia) {
+    if (!noticia.destacada) {
+      await supabase.from("noticias").update({ destacada: false }).eq("destacada", true);
+    }
+    const { error } = await supabase.from("noticias").update({ destacada: !noticia.destacada }).eq("id", noticia.id);
+    if (error) return alert("Error: " + error.message);
+    await cargar();
+  }
+
+  async function togglePublicada(noticia) {
+    const { error } = await supabase.from("noticias").update({ publicada: !noticia.publicada }).eq("id", noticia.id);
+    if (error) return alert("Error: " + error.message);
+    await cargar();
+  }
+
+  async function duplicar(noticia) {
+    const copia = { ...noticia };
+    delete copia.id;
+    delete copia.creado_en;
+    copia.titulo = "Copia de " + noticia.titulo;
+    copia.slug = noticia.slug + "-copia-" + Date.now().toString(36);
+    copia.destacada = false;
+    copia.publicada = false;
+    const { error } = await supabase.from("noticias").insert(copia);
+    if (error) return alert("Error al duplicar: " + error.message);
+    await cargar();
+  }
+
+  async function borrar(noticia) {
+    if (!confirm(`¿BORRAR definitivamente "${noticia.titulo}"? Esta acción no se puede deshacer.`)) return;
+    const { error } = await supabase.from("noticias").delete().eq("id", noticia.id);
+    if (error) return alert("Error al borrar: " + error.message);
+    await cargar();
+  }
+
+  document.querySelectorAll("#tabs button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("#tabs button").forEach((b) => b.classList.remove("adm-tab-activo"));
+      btn.classList.add("adm-tab-activo");
+      filtroActual = btn.dataset.filtro;
+      render();
+    });
+  });
+
+  await cargar();
+</script>
+
+<style is:global>
+  .adm { padding: 2rem 1.5rem 4rem; max-width: 78rem; }
+  .adm-migas { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--c-tenue); margin-bottom: 1.2rem; }
+  .adm-migas a { color: var(--c-tinta-suave); }
+  .adm-migas a:hover { color: var(--c-rojo); }
+  .adm-migas-sep { color: var(--c-tenue); }
+  .adm-migas-actual { color: var(--c-tinta); }
+  .adm-cab { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; gap: 1rem; flex-wrap: wrap; }
+  .adm-cab h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0; }
+  .adm-nuevo { display: inline-block; padding: 0.6rem 1.2rem; background: var(--c-rojo); color: var(--c-papel); border-radius: 2px; font-size: 0.88rem; font-weight: 500; }
+  .adm-nuevo:hover { background: var(--c-rojo-hondo); }
+  .adm-tabs { display: flex; gap: 0.2rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--c-borde); overflow-x: auto; }
+  .adm-tab { background: none; border: none; padding: 0.6rem 1rem; font-size: 0.85rem; color: var(--c-tinta-suave); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: var(--sans); white-space: nowrap; display: flex; align-items: center; gap: 0.5rem; }
+  .adm-tab:hover { color: var(--c-tinta); }
+  .adm-tab-activo { color: var(--c-rojo); border-bottom-color: var(--c-rojo); font-weight: 500; }
+  .adm-cnt { font-size: 0.72rem; background: var(--c-crema); padding: 0.1rem 0.5rem; border-radius: 10px; color: var(--c-tinta-suave); font-weight: 400; }
+  .adm-tab-activo .adm-cnt { background: var(--c-rojo); color: var(--c-papel); }
+  .adm-cargando, .adm-vacio, .adm-error { padding: 2rem; text-align: center; color: var(--c-tinta-suave); font-style: italic; }
+  .adm-error { color: var(--c-rojo); }
+  .adm-tabla-wrap { overflow-x: auto; border: 1px solid var(--c-borde); border-radius: 2px; }
+  .adm-tabla { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--c-papel); }
+  .adm-tabla thead th { text-align: left; padding: 0.7rem 1rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--c-tenue); background: var(--c-crema); border-bottom: 1px solid var(--c-borde); font-weight: 500; }
+  .adm-tabla tbody td { padding: 1.4rem 1rem; border-bottom: 1px solid var(--c-borde); vertical-align: middle; }
+  .adm-tabla tbody tr:last-child td { border-bottom: none; }
+  .adm-tabla tbody tr:hover { background: rgba(0,0,0,0.025); }
+  .adm-col-titulo { min-width: 20rem; }
+  .adm-titulo-wrap { display: flex; flex-direction: column; gap: 0.3rem; }
+  .adm-titulo-link { color: var(--c-tinta); font-weight: 500; font-size: 0.95rem; line-height: 1.3; }
+  .adm-titulo-link:hover { color: var(--c-rojo); }
+  .adm-titulo-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .adm-slug { font-size: 0.72rem; color: var(--c-tenue); font-family: monospace; }
+  .adm-mini-badge { display: inline-block; font-size: 0.65rem; padding: 0.1rem 0.45rem; border-radius: 2px; letter-spacing: 0.03em; text-transform: uppercase; font-weight: 500; }
+  .adm-mini-badge-dest { background: var(--c-ocre); color: var(--c-papel); }
+  .adm-mini-badge-bor { background: var(--c-crema); color: var(--c-tinta-suave); border: 1px solid var(--c-borde); }
+  .adm-col-fecha { color: var(--c-tinta-suave); white-space: nowrap; font-size: 0.85rem; width: 14rem; }
+  .adm-col-acc { white-space: nowrap; width: 14rem; text-align: right; }
+  .adm-acc {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.2rem; height: 2.2rem;
+    padding: 0; margin-left: 0.25rem;
+    background: none; border: 1px solid var(--c-borde);
+    color: var(--c-tinta-suave); cursor: pointer; border-radius: 2px;
+    text-decoration: none; box-sizing: border-box;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  }
+  .adm-acc:hover { border-color: var(--c-tinta); color: var(--c-tinta); background: var(--c-crema); }
+  .adm-acc-danger:hover { border-color: var(--c-rojo); color: var(--c-rojo); background: transparent; }
+  .adm-acc svg { display: block; }
+</style>

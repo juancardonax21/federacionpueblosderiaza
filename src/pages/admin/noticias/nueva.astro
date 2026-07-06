@@ -1,0 +1,121 @@
+---
+import Base from "../../../layouts/Base.astro";
+import FormularioNoticia from "../../../components/admin/FormularioNoticia.astro";
+---
+
+<Base title="Nueva noticia · Panel Federación" description="Crear una nueva noticia">
+  <section class="admin-edit-page">
+    <nav class="adm-edit-migas">
+      <a href="/admin/">Panel</a>
+      <span>›</span>
+      <a href="/admin/noticias/">Noticias</a>
+      <span>›</span>
+      <span>Nueva</span>
+    </nav>
+
+    <header class="adm-edit-cabecera">
+      <div class="adm-edit-cab-inner">
+        <div class="adm-edit-cab-texto">
+          <p class="adm-edit-subtitulo">Crear nueva noticia</p>
+          <h1 class="adm-edit-titulo">Nueva publicación</h1>
+          <p class="adm-edit-ayuda">Rellena los datos. Los campos marcados con * son obligatorios.</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="adm-edit-contenedor">
+      <FormularioNoticia />
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .admin-edit-page { min-height: 100vh; background: var(--c-papel); }
+  
+  .adm-edit-migas { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--c-tenue); padding: 1.5rem 2rem 0; margin-bottom: 0; }
+  .adm-edit-migas a { color: var(--c-tinta-suave); text-decoration: none; }
+  .adm-edit-migas a:hover { color: var(--c-rojo); }
+
+  .adm-edit-cabecera { 
+    background: linear-gradient(135deg, rgba(160, 48, 16, 0.04) 0%, rgba(224, 160, 32, 0.03) 100%);
+    border-bottom: 1px solid var(--c-borde);
+    padding: 2.5rem 2rem;
+  }
+  
+  .adm-edit-cab-inner { 
+    max-width: 78rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .adm-edit-cab-texto { flex: 1; }
+  .adm-edit-subtitulo { 
+    font-size: 0.75rem; 
+    text-transform: uppercase; 
+    letter-spacing: 0.15em; 
+    color: var(--c-rojo); 
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+  .adm-edit-titulo { 
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.6rem); 
+    font-weight: 400;
+    margin: 0 0 0.5rem;
+    line-height: 1.1;
+    color: var(--c-tinta);
+  }
+  .adm-edit-slug { 
+    font-size: 0.85rem; 
+    color: var(--c-tenue); 
+    font-family: monospace;
+    margin: 0;
+  }
+  .adm-edit-ayuda {
+    font-size: 0.9rem;
+    color: var(--c-tinta-suave);
+    margin: 0.5rem 0 0;
+    font-style: italic;
+  }
+
+  .adm-edit-metadata { 
+    display: flex; 
+    gap: 2rem; 
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .adm-edit-meta-item { 
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .adm-edit-meta-label { 
+    font-size: 0.72rem; 
+    text-transform: uppercase; 
+    letter-spacing: 0.08em;
+    color: var(--c-tenue); 
+    font-weight: 500;
+  }
+  .adm-edit-meta-valor { 
+    font-size: 0.95rem; 
+    color: var(--c-tinta); 
+    font-weight: 500;
+  }
+
+  .adm-edit-contenedor { 
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .adm-edit-migas { padding: 1rem 1rem 0; }
+    .adm-edit-cabecera { padding: 1.5rem 1rem; }
+    .adm-edit-cab-inner { flex-direction: column; gap: 1.5rem; }
+    .adm-edit-metadata { justify-content: flex-start; }
+    .adm-edit-contenedor { padding: 1rem; }
+  }
