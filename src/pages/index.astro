@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { getNoticias, getEventos, getEventoDestacado } from "../lib/supabase";
+import BannerDestacado from "../components/BannerDestacado.astro";
 
 const destacado = await getEventoDestacado();
 
@@ -30,13 +31,9 @@ const fecha = (d) =>
 ---
 
 <Base title="Federación Pueblos de Riaza" description="Comprometidos con el territorio. La voz de las asociaciones de la Sierra de Ayllón.">
-  {destacado && (
-    <a class="banner-evento" href={`/eventos/${destacado.slug}/`}>
-      <span class="banner-evento__et">Próximo evento</span>
-      <span class="banner-evento__tx">{destacado.titulo}{destacado.lugar ? ` · ${destacado.lugar}` : ""}</span>
-      <span class="banner-evento__fl">→</span>
-    </a>
-  )}
+  <section class="banner-dest-seccion">
+    <BannerDestacado evento={destacado} />
+  </section>
 
   <section class="hero">
     <div class="hero__fondo">
@@ -52,6 +49,7 @@ const fecha = (d) =>
       <a class="boton boton--claro" href="/la-federacion/">Conoce la Federación</a>
     </div>
   </section>
+
 
   <section class="contenedor-ancho intro">
     <div class="intro__col">
@@ -151,11 +149,6 @@ const fecha = (d) =>
 </Base>
 
 <style>
-  .banner-evento { display: flex; align-items: center; gap: 1rem; background: var(--c-tinta); color: var(--c-papel); padding: 0.85rem 1.5rem; font-size: 0.92rem; }
-  .banner-evento__et { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-ocre); font-weight: 600; white-space: nowrap; }
-  .banner-evento__tx { color: var(--c-papel); }
-  .banner-evento__fl { margin-left: auto; transition: transform 0.2s ease; }
-  .banner-evento:hover .banner-evento__fl { transform: translateX(4px); }
   .hero { position: relative; min-height: 78vh; display: flex; align-items: flex-end; overflow: hidden; }
   .hero__fondo { position: absolute; inset: 0; z-index: 0; }
   .hero__fondo img { width: 100%; height: 100%; object-fit: cover; }
@@ -222,5 +215,15 @@ const fecha = (d) =>
     .intro, .intro__doble, .informe__inner, .territorio__inner { grid-template-columns: 1fr; gap: 2.5rem; }
     .informe__icono { justify-content: flex-start; }
     .rejilla { grid-template-columns: 1fr; }
+  }
+</style>
+
+<style>
+  .banner-dest-seccion {
+    overflow: hidden;
+    width: 100%;
+    background: rgba(160, 48, 16, 0.20);
+    margin: 0;
+    padding: 0;
   }
 </style>

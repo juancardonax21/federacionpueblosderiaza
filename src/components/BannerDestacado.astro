@@ -1,0 +1,171 @@
+---
+interface Props {
+  evento?: any;
+}
+const { evento = null } = Astro.props;
+if (!evento) {
+  return null;
+}
+---
+
+<section class="banner-dest">
+  <div class="banner-dest__imagen">
+    {evento.cartel_url ? (
+      <img src={evento.cartel_url} alt={evento.titulo} />
+    ) : (
+      <div class="banner-dest__sin-imagen"></div>
+    )}
+  </div>
+  
+  <div class="banner-dest__contenido">
+    <p class="banner-dest__etiqueta">Próximo evento destacado</p>
+    <h2 class="banner-dest__titulo">{evento.titulo}</h2>
+    <div class="banner-dest__meta">
+      {evento.lugar && <span class="banner-dest__lugar">{evento.lugar}</span>}
+      <span class="banner-dest__fecha">
+        {new Date(evento.fecha_inicio).toLocaleDateString("es-ES", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })}
+      </span>
+    </div>
+    <a href={`/eventos/${evento.slug}/`} class="banner-dest__btn">
+      Más información
+    </a>
+  </div>
+</section>
+
+<style>
+  .banner-dest {
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+    background: transparent;
+    
+    
+    overflow: visible;
+    margin: 0 auto;
+    max-width: 78rem;
+    position: relative;
+    z-index: 10;
+    transition: box-shadow 0.2s ease;
+  }
+
+
+  .banner-dest__imagen {
+    flex: 0 0 10rem;
+    transform: rotate(-5deg);
+    z-index: -1;
+    margin-right: -2rem;
+    min-height: 10rem;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .banner-dest__imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .banner-dest__sin-imagen {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-tenue);
+    font-size: 0.85rem;
+  }
+
+  .banner-dest__contenido {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.8rem 1.8rem 1.8rem 1.5rem;
+    margin-left: 1rem;
+  }
+
+  .banner-dest__etiqueta {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--c-rojo);
+    margin: 0 0 0.6rem;
+    font-weight: 600;
+  }
+
+  .banner-dest__titulo {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 0.8rem;
+    color: var(--c-tinta);
+  }
+
+  .banner-dest__meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .banner-dest__lugar {
+    font-size: 0.95rem;
+    color: var(--c-tinta-suave);
+    font-weight: 500;
+  }
+
+  .banner-dest__fecha {
+    font-size: 0.9rem;
+    color: var(--c-tenue);
+    font-family: monospace;
+  }
+
+  .banner-dest__btn {
+    align-self: flex-start;
+    display: inline-block;
+    background: var(--c-rojo);
+    color: var(--c-papel);
+    padding: 0.7rem 1.4rem;
+    border-radius: 2px;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    transition: background 0.2s ease;
+  }
+
+  .banner-dest__btn:hover {
+    background: var(--c-rojo-hondo);
+  }
+
+  @media (max-width: 640px) {
+    .banner-dest {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .banner-dest__imagen {
+      flex: 0 0 10rem;
+    transform: rotate(-5deg);
+    z-index: -1;
+    margin-right: -2rem;
+      min-height: 10rem;
+    }
+
+    .banner-dest__contenido {
+      padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+    }
+
+    .banner-dest__titulo {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+    }
+  }
+</style>
