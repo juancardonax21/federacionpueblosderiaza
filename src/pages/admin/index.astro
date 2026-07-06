@@ -1,0 +1,72 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+
+<Base title="Panel · Federación" description="Panel de administración">
+  <section class="panel contenedor-ancho">
+    <header class="panel__cab">
+      <p class="ojillo">Panel de administración</p>
+      <h1>Hola <span id="user-email"></span></h1>
+      <p class="panel__lede">
+        Bienvenido/a al panel de gestión de contenidos.
+      </p>
+    </header>
+
+    <div class="panel__rejilla">
+      <a class="panel__tarjeta" href="/admin/noticias/">
+        <h2>Noticias</h2>
+        <p>Crear, editar y publicar noticias.</p>
+      </a>
+      <a class="panel__tarjeta" href="/admin/eventos/">
+        <h2>Eventos</h2>
+        <p>Crear, editar y publicar eventos.</p>
+      </a>
+    </div>
+
+    <p class="panel__pie">
+      <button id="btn-logout" class="panel__logout" type="button">Cerrar sesión</button>
+    </p>
+  </section>
+</Base>
+
+<script>
+  import { createClient } from "@supabase/supabase-js";
+
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  );
+
+  // Protección: si no hay sesión, mandamos a /admin/login
+  const { data } = await supabase.auth.getSession();
+  if (!data?.session) {
+    window.location.href = "/admin/login/";
+  } else {
+    // Mostrar email del usuario
+    const emailSpan = document.getElementById("user-email");
+    if (emailSpan) emailSpan.textContent = data.session.user.email || "";
+  }
+
+  // Botón cerrar sesión
+  const logout = document.getElementById("btn-logout");
+  logout?.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/admin/login/";
+  });
+</script>
+
+<style>
+  .panel { padding: 3rem 1.5rem 4rem; }
+  .panel__cab { margin-bottom: 3rem; max-width: 44rem; }
+  .panel__cab h1 { font-size: clamp(2rem, 4vw, 2.8rem); margin: 0.4rem 0 0.8rem; }
+  #user-email { color: var(--c-rojo); font-family: var(--sans); font-size: 1.4rem; font-weight: 500; }
+  .panel__lede { color: var(--c-tinta-suave); font-family: var(--serif); font-style: italic; font-size: 1.15rem; }
+  .panel__rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+  .panel__tarjeta { display: block; padding: 2rem 1.5rem; background: var(--c-crema); border: 1px solid var(--c-borde); border-radius: 2px; transition: border-color 0.2s ease, transform 0.2s ease; }
+  .panel__tarjeta:hover { border-color: var(--c-rojo); transform: translateY(-2px); }
+  .panel__tarjeta h2 { font-size: 1.5rem; margin: 0 0 0.5rem; }
+  .panel__tarjeta p { color: var(--c-tinta-suave); font-size: 0.95rem; margin: 0; }
+  .panel__pie { border-top: 1px solid var(--c-borde); padding-top: 2rem; }
+  .panel__logout { background: none; border: 1px solid var(--c-borde); color: var(--c-tinta-suave); padding: 0.6rem 1.4rem; border-radius: 2px; cursor: pointer; font-size: 0.85rem; letter-spacing: 0.05em; transition: color 0.2s ease, border-color 0.2s ease; }
+  .panel__logout:hover { color: var(--c-rojo); border-color: var(--c-rojo); }
+</style>
