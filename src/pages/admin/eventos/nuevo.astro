@@ -1,0 +1,27 @@
+---
+import Base from "../../../layouts/Base.astro";
+import FormularioEvento from "../../../components/admin/FormularioEvento.astro";
+---
+
+<Base title="Nuevo evento · Panel Federación" description="Crear un nuevo evento">
+  <section class="admin-form-page contenedor-ancho">
+    <nav class="adm-migas">
+      <a href="/admin/">Panel</a>
+      <span class="adm-migas-sep">›</span>
+      <a href="/admin/eventos/">Eventos</a>
+      <span class="adm-migas-sep">›</span>
+      <span class="adm-migas-actual">Nuevo</span>
+    </nav>
+
+    <h1 class="admin-form-titulo">Nuevo evento</h1>
+    <p class="admin-form-lede">Rellena los datos del nuevo evento. Los marcados con * son obligatorios.</p>
+
+    <FormularioEvento />
+  </section>
+</Base>
+
+<style is:global>
+  .admin-form-page { padding: 2rem 1.5rem 4rem; max-width: 78rem; }
+  .admin-form-titulo { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 1.2rem 0 0.5rem; }
+  .admin-form-lede { color: var(--c-tinta-suave); margin-bottom: 2rem; font-family: var(--serif); font-style: italic; }
+</style>
