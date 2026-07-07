@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { getNoticias, getNoticia } from "../../lib/supabase";
+import { Calendar } from "@lucide/astro";
 import { marked } from "marked";
 const { slug } = Astro.params;
 const noticia = await getNoticia(slug);
@@ -21,17 +22,39 @@ const enc = encodeURIComponent;
   <article class="noticia">
     <header class="noticia__cab contenedor">
       <a class="volver" href="/al-dia/">← Al día</a>
-      <time class="meta">{fecha(noticia.fecha)}</time>
       <h1>{noticia.titulo}</h1>
-      {noticia.entradilla && <p class="noticia__entradilla">{noticia.entradilla}</p>}
+      {noticia.entradilla && <p class="noticia__lead">{noticia.entradilla}</p>}
+      <time class="noticia__fecha"><Calendar size={18} style="display: inline; margin-right: 0.5rem; vertical-align: middle;" /> {fecha(noticia.fecha)}</time>
     </header>
-    {noticia.portada_url && (
-      <figure class="noticia__portada contenedor-ancho">
+
+    {noticia.fotos && noticia.fotos.length > 0 && noticia.fotos.find((f) => f.es_principal) ? (
+      <figure class="noticia__portada contenedor">
+        <img src={noticia.fotos.find((f) => f.es_principal).url} alt={noticia.titulo} />
+        {noticia.fotos.find((f) => f.es_principal).pie_foto && (
+          <figcaption>{noticia.fotos.find((f) => f.es_principal).pie_foto}</figcaption>
+        )}
+      </figure>
+    ) : noticia.portada_url ? (
+      <figure class="noticia__portada contenedor">
         <img src={noticia.portada_url} alt={noticia.titulo} />
       </figure>
-    )}
+    ) : null}
+
     <div class="noticia__cuerpo contenedor prosa" set:html={contenidoHtml} />
 
+    {noticia.fotos && noticia.fotos.filter((f) => !f.es_principal).length > 0 && (
+      <section class="noticia__galeria contenedor-ancho">
+        <h2>Galería</h2>
+        <div class="galeria-grid">
+          {noticia.fotos.filter((f) => !f.es_principal).map((foto) => (
+            <figure class="galeria-item">
+              <img src={foto.url} alt="Foto galería" />
+              {foto.pie_foto && <figcaption>{foto.pie_foto}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
     <div class="compartir contenedor">
       <span class="compartir__et">Compartir</span>
       <div class="compartir__botones">
@@ -82,10 +105,8 @@ const enc = encodeURIComponent;
   .volver { color: var(--c-tinta-suave); font-size: 0.85rem; display: inline-block; margin-bottom: 1.5rem; }
   .volver:hover { color: var(--c-rojo); }
   .noticia__cab .meta { display: block; margin-bottom: 0.5rem; }
-  .noticia__cab h1 { font-size: clamp(2rem, 5vw, 3.4rem); }
+  .noticia__cab h1 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 0.95; margin: 1.2rem 0 0.4rem; }
   .noticia__entradilla { font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--c-tinta-suave); margin-top: 1.2rem; line-height: 1.5; }
-  .noticia__portada { aspect-ratio: 16/8; overflow: hidden; border-radius: 2px; margin: 1.5rem auto 2.5rem; }
-  .noticia__portada img { width: 100%; height: 100%; object-fit: cover; }
   .noticia__cuerpo { font-size: 1.12rem; padding-bottom: 2rem; }
   .meta { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-tenue); }
 
@@ -114,4 +135,15 @@ const enc = encodeURIComponent;
   .tarjeta__img--vacia span { font-family: var(--serif); font-size: 1.5rem; color: var(--c-borde); letter-spacing: 0.1em; }
   .tarjeta__titulo { font-size: 1.2rem; margin: 0.4rem 0 0; transition: color 0.2s ease; }
   .tarjeta:hover .tarjeta__titulo { color: var(--c-rojo); }
+  .noticia__lead { font-size: 1.5rem; line-height: 1.25; font-style: italic; margin: 1rem 0 0rem; color: var(--c-tinta-suave); }
+  .noticia__fecha { font-size: 0.9rem; color: var(--c-tenue); margin-bottom: 0; }
+  .noticia__portada { margin: 0 auto 1rem; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; }
+  .noticia__portada img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 2px; }
+  .noticia__portada figcaption { font-size: 0.9rem; color: var(--c-tinta-suave); margin-top: 0.8rem; font-style: italic; }
+  .noticia__galeria { margin: 3rem 0; padding-top: 2rem; border-top: 1px solid var(--c-borde); }
+  .noticia__galeria h2 { font-size: 1.6rem; margin-bottom: 1.5rem; font-family: var(--serif); font-weight: 400; }
+  .galeria-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.5rem; }
+  .galeria-item { overflow: hidden; border-radius: 2px; }
+  .galeria-item img { width: 100%; height: 100%; display: block; aspect-ratio: 3 / 4; object-fit: cover; }
+  .galeria-item figcaption { font-size: 0.85rem; color: var(--c-tinta-suave); padding: 0.8rem; background: var(--c-crema); font-style: italic; }
 </style>
