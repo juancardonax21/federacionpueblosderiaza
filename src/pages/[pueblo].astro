@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import Icono from "../components/Icono.astro";
+import { ArrowLeft } from "@lucide/astro";
 import { getPueblo, getPueblos, getNoticiasDePueblo, getFotosDePueblo, getEventosDePueblo } from "../lib/supabase";
 
 const { pueblo: slug } = Astro.params;
@@ -50,7 +51,7 @@ const siguiente = todos[(idx + 1) % todos.length];
         <img src={pb.foto_url} alt={pb.nombre} />
       </div>
       <div class="pb-hero__txt contenedor-ancho">
-        <a class="volver" href="/los-pueblos/">← Los Pueblos</a>
+        <a class="volver" href="/los-pueblos/"><ArrowLeft size={15} /> Los Pueblos</a>
         <span class="pb-piedra"><span class="pb-punto" style={`--p:${pb.color}`}></span> {pb.piedra}</span>
         <h1>{pb.nombre}</h1>
       </div>
@@ -159,7 +160,7 @@ const siguiente = todos[(idx + 1) % todos.length];
   .pb-hero__foto img { width: 100%; height: 100%; object-fit: cover; }
   .pb-hero__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(20,18,15,0.85), rgba(20,18,15,0.1) 60%); }
   .pb-hero__txt { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; padding-bottom: 2rem; color: var(--c-papel); z-index: 1; }
-  .volver { color: color-mix(in srgb, var(--c-papel) 80%, transparent); font-size: 0.85rem; display: inline-block; margin-bottom: 1rem; }
+  .volver { color: color-mix(in srgb, var(--c-papel) 80%, transparent); font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; margin-bottom: 1rem; }
   .volver:hover { color: var(--c-papel); }
   .pb-piedra { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-papel); margin-bottom: 0.4rem; }
   .pb-punto { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--p); }
@@ -208,7 +209,7 @@ const siguiente = todos[(idx + 1) % todos.length];
   .seccion-cab .linea { flex: 1; height: 1px; background: var(--c-borde); }
   .meta { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-tenue); display: block; }
   .rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem 2rem; }
-  .tarjeta__img { overflow: hidden; border-radius: 2px; aspect-ratio: 3/2; margin-bottom: 1rem; }
+  .tarjeta__img { overflow: hidden; border-radius: 3px; border: 1px solid var(--c-borde); aspect-ratio: 3/2; margin-bottom: 1rem; }
   .tarjeta__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
   .tarjeta:hover .tarjeta__img img { transform: scale(1.04); }
   .tarjeta__img--vacia { background: var(--c-crema); display: flex; align-items: center; justify-content: center; }

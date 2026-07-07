@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import { getNoticias, getEventos, getEventoDestacado } from "../lib/supabase";
 import BannerDestacado from "../components/BannerDestacado.astro";
+import { ArrowRight } from "@lucide/astro";
 
 const destacado = await getEventoDestacado();
 
@@ -46,7 +47,7 @@ const fecha = (d) =>
         Diez pueblos del nordeste de Segovia unidos para cuidar su patrimonio,
         su paisaje y sus formas de vida. Esta es nuestra voz común.
       </p>
-      <a class="boton boton--claro" href="/la-federacion/">Conoce la Federación</a>
+      <a class="boton boton--claro" href="/la-federacion/">Conoce la Federación <ArrowRight size={16} /></a>
     </div>
   </section>
 
@@ -77,7 +78,7 @@ const fecha = (d) =>
           son uno de los ejemplos más singulares y valiosos de arquitectura
           tradicional de montaña en el centro peninsular.
         </p>
-        <a class="enlace-flecha" href="/los-pueblos/">Conoce los Pueblos de Riaza →</a>
+        <a class="enlace-flecha" href="/los-pueblos/">Conoce los Pueblos de Riaza <ArrowRight size={15} /></a>
       </div>
     </div>
   </section>
@@ -137,7 +138,7 @@ const fecha = (d) =>
           La piedra de la tierra —roja, negra, amarilla— da nombre a este
           territorio único de la Sierra de Ayllón.
         </p>
-        <a class="boton boton--linea" href="/los-pueblos/">Conoce los pueblos</a>
+        <a class="boton boton--linea" href="/los-pueblos/">Conoce los pueblos <ArrowRight size={16} /></a>
       </div>
       <ul class="territorio__lista">
         <li><span style="--p: var(--c-rojo)"></span> Madriguera y Villacorta · piedra roja</li>
@@ -162,7 +163,7 @@ const fecha = (d) =>
   .ojillo--claro { color: var(--c-ocre); }
   .hero__titulo { font-size: clamp(2.8rem, 8vw, 6rem); margin: 0.8rem 0 0; font-weight: 400; color: var(--c-papel); text-shadow: 0 2px 24px rgba(0,0,0,0.4); }
   .hero__entradilla { font-size: 1.3rem; line-height: 1.6; color: #fff; max-width: 34rem; margin: 1.6rem 0 2rem; text-shadow: 0 1px 16px rgba(0,0,0,0.6); }
-  .boton { display: inline-block; background: var(--c-tinta); color: var(--c-papel); padding: 0.8rem 1.8rem; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; border-radius: var(--radio); transition: background 0.2s ease; }
+  .boton { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--c-tinta); color: var(--c-papel); padding: 0.8rem 1.8rem; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; border-radius: var(--radio); transition: background 0.2s ease; }
   .boton:hover { background: var(--acento); color: #fff; }
   .boton--claro { background: var(--c-papel); color: var(--c-tinta); }
   .boton--claro:hover { background: var(--c-ocre); color: var(--c-tinta); }
@@ -173,7 +174,7 @@ const fecha = (d) =>
   .intro__doble { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
   .intro__h { font-size: 1.3rem; color: var(--c-rojo); margin-bottom: 0.6rem; }
   .intro__doble p { color: var(--c-tinta-suave); }
-  .enlace-flecha { display: inline-block; margin-top: 0.8rem; color: var(--c-tinta); font-weight: 500; font-size: 0.95rem; border-bottom: 1px solid var(--c-borde); padding-bottom: 2px; }
+  .enlace-flecha { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.8rem; color: var(--c-tinta); font-weight: 500; font-size: 0.95rem; border-bottom: 1px solid var(--c-borde); padding-bottom: 2px; }
   .enlace-flecha:hover { color: var(--c-rojo); border-color: var(--c-rojo); }
   .seccion-noticias { padding-bottom: 2rem; }
   .seccion-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--c-borde); padding-bottom: 1rem; }
@@ -181,7 +182,7 @@ const fecha = (d) =>
   .seccion-cab__todas { font-size: 0.85rem; color: var(--c-rojo); font-weight: 500; white-space: nowrap; }
   .meta { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-tenue); display: block; }
   .rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem 2rem; }
-  .tarjeta__img { overflow: hidden; border-radius: 2px; aspect-ratio: 3/2; margin-bottom: 1rem; }
+  .tarjeta__img { overflow: hidden; border-radius: 3px; border: 1px solid var(--c-borde); aspect-ratio: 3/2; margin-bottom: 1rem; }
   .tarjeta__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
   .tarjeta:hover .tarjeta__img img { transform: scale(1.04); }
   .tarjeta__img--vacia { background: var(--c-crema); display: flex; align-items: center; justify-content: center; }

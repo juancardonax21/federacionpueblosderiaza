@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { ArrowRight } from "@lucide/astro";
 ---
 
 <Base
@@ -36,7 +37,7 @@ import Base from "../layouts/Base.astro";
           pueblos, cuidar su patrimonio y promover un desarrollo sostenible y
           respetuoso con lo que somos.
         </p>
-        <a class="boton boton--linea" href="/los-pueblos/">Conoce los pueblos</a>
+        <a class="boton boton--linea" href="/los-pueblos/">Conoce los pueblos <ArrowRight size={16} /></a>
       </div>
       <div class="mosaico">
         <div class="mosaico__col">
@@ -168,7 +169,7 @@ import Base from "../layouts/Base.astro";
   .foto-grande img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
 
   .boton {
-    display: inline-block; background: var(--c-tinta); color: var(--c-papel);
+    display: inline-flex; align-items: center; gap: 0.5rem; background: var(--c-tinta); color: var(--c-papel);
     padding: 0.8rem 1.8rem; font-size: 0.82rem; letter-spacing: 0.06em;
     text-transform: uppercase; border-radius: 2px; transition: all 0.2s ease;
   }

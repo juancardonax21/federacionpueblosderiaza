@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { getNoticias, getNoticia } from "../../lib/supabase";
-import { Calendar } from "@lucide/astro";
+import { Calendar, ArrowLeft } from "@lucide/astro";
 import { marked } from "marked";
 const { slug } = Astro.params;
 const noticia = await getNoticia(slug);
@@ -30,7 +30,7 @@ const enc = encodeURIComponent;
 <Base title={`${noticia.titulo} · Federación Pueblos de Riaza`} description={noticia.entradilla || noticia.titulo} image={noticia.portada_url}>
   <article class="noticia">
     <header class="noticia__cab contenedor">
-      <a class="volver" href="/al-dia/">← Al día</a>
+      <a class="volver" href="/al-dia/"><ArrowLeft size={15} /> Al día</a>
       <h1>{noticia.titulo}</h1>
       {noticia.entradilla && <p class="noticia__lead">{noticia.entradilla}</p>}
       <time class="noticia__fecha"><Calendar size={18} style="display: inline; margin-right: 0.5rem; vertical-align: middle;" /> {fecha(noticia.fecha)}</time>
@@ -244,7 +244,7 @@ const enc = encodeURIComponent;
 
 <style>
   .noticia__cab { padding: 3rem 1.5rem 2rem; }
-  .volver { color: var(--c-tinta-suave); font-size: 0.85rem; display: inline-block; margin-bottom: 1.5rem; }
+  .volver { color: var(--c-tinta-suave); font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; margin-bottom: 1.5rem; }
   .volver:hover { color: var(--c-rojo); }
   .noticia__cab .meta { display: block; margin-bottom: 0.5rem; }
   .noticia__cab h1 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 0.95; margin: 1.2rem 0 0.4rem; }
@@ -272,7 +272,7 @@ const enc = encodeURIComponent;
   .seccion-cab h2 { font-size: 1.8rem; }
   .seccion-cab .linea { flex: 1; height: 1px; background: var(--c-borde); }
   .rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem 2rem; }
-  .tarjeta__img { overflow: hidden; border-radius: 2px; aspect-ratio: 3/2; margin-bottom: 1rem; }
+  .tarjeta__img { overflow: hidden; border-radius: 3px; border: 1px solid var(--c-borde); aspect-ratio: 3/2; margin-bottom: 1rem; }
   .tarjeta__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
   .tarjeta:hover .tarjeta__img img { transform: scale(1.04); }
   .tarjeta__img--vacia { background: var(--c-crema); display: flex; align-items: center; justify-content: center; }

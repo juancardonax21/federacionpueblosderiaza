@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { MapPin, Mail, Send } from "@lucide/astro";
 ---
 
 <Base title="Contacto · Federación Pueblos de Riaza" description="Escríbenos: estamos a tu disposición para consultas, prensa y colaboraciones.">
@@ -36,17 +37,17 @@ import Base from "../layouts/Base.astro";
           <label for="web">No rellenar</label>
           <input type="text" id="web" name="web" tabindex="-1" autocomplete="off" />
         </div>
-        <button type="submit" class="enviar">Enviar mensaje</button>
+        <button type="submit" class="enviar"><span>Enviar mensaje</span> <Send size={15} /></button>
         <p class="aviso" id="aviso"></p>
       </form>
 
       <aside class="contacto__datos">
         <div class="dato">
-          <h2>Dónde estamos</h2>
+          <h2><span class="dato__ico"><MapPin size={15} /></span> Dónde estamos</h2>
           <p>Plaza de la Constitución, 1<br />40510 Madriguera, Riaza (Segovia)</p>
         </div>
         <div class="dato">
-          <h2>Email</h2>
+          <h2><span class="dato__ico"><Mail size={15} /></span> Email</h2>
           <p><a href="mailto:info@federacionpueblosderiaza.org">info@federacionpueblosderiaza.org</a></p>
         </div>
       </aside>
@@ -60,8 +61,9 @@ import Base from "../layouts/Base.astro";
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const boton = form.querySelector("button");
+    const botonLabel = boton.querySelector("span");
     boton.disabled = true;
-    boton.textContent = "Enviando...";
+    botonLabel.textContent = "Enviando...";
     aviso.textContent = "";
     aviso.className = "aviso";
 
@@ -87,7 +89,7 @@ import Base from "../layouts/Base.astro";
       aviso.classList.add("aviso--error");
     } finally {
       boton.disabled = false;
-      boton.textContent = "Enviar mensaje";
+      botonLabel.textContent = "Enviar mensaje";
     }
   });
 </script>
@@ -115,7 +117,8 @@ import Base from "../layouts/Base.astro";
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
   .enviar {
-    align-self: flex-start; background: var(--c-tinta); color: var(--c-papel);
+    align-self: flex-start; display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--c-tinta); color: var(--c-papel);
     border: none; padding: 0.85rem 2rem; font-size: 0.85rem; letter-spacing: 0.06em;
     text-transform: uppercase; border-radius: 2px; cursor: pointer; transition: background 0.2s ease;
     font-family: var(--sans); margin-top: 0.5rem;
@@ -141,7 +144,8 @@ import Base from "../layouts/Base.astro";
   }
 
   .contacto__datos { display: flex; flex-direction: column; gap: 2rem; padding-top: 0.5rem; }
-  .dato h2 { font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-tenue); margin-bottom: 0.5rem; }
+  .dato h2 { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-tenue); margin-bottom: 0.5rem; }
+  .dato__ico { color: var(--c-rojo); display: inline-flex; }
   .dato p { color: var(--c-tinta-suave); line-height: 1.6; }
   .dato a { color: var(--c-rojo); }
   .dato a:hover { text-decoration: underline; }

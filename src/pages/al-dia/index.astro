@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { getNoticias, getTodosEventos } from "../../lib/supabase";
+import { ArrowRight } from "@lucide/astro";
 
 const noticias = await getNoticias();
 const eventos = await getTodosEventos();
@@ -56,7 +57,7 @@ const fecha = (d) =>
         <time class="meta">{fecha(destacada.fecha)}</time>
         <h2>{destacada.titulo}</h2>
         {destacada.entradilla && <p>{destacada.entradilla}</p>}
-        <span class="leer">Leer más →</span>
+        <span class="leer">Leer más <ArrowRight size={15} /></span>
       </div>
     </a>
   )}
@@ -104,7 +105,7 @@ const fecha = (d) =>
   .aldia-dest__txt .meta { margin: 0.6rem 0 0.4rem; }
   .aldia-dest__txt h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
   .aldia-dest__txt p { color: var(--c-tinta-suave); margin: 0.6rem 0 0.8rem; }
-  .leer { color: var(--c-rojo); font-size: 0.9rem; font-weight: 500; }
+  .leer { color: var(--c-rojo); font-size: 0.9rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem; }
   .aldia-lista { padding-bottom: 2rem; }
   .rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem 2rem; }
   .tarjeta__img { overflow: hidden; border-radius: 3px; border: 1px solid var(--c-borde); aspect-ratio: 3/2; margin-bottom: 1rem; }

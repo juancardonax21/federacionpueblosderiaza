@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Logo from "../components/Logo.astro";
+import { MapPin, Mail } from "@lucide/astro";
 
 interface Props {
   title: string;
@@ -114,9 +115,12 @@ const year = new Date().getFullYear();
           </div>
           <div>
             <h4>Dónde estamos</h4>
-            <p style="color: var(--c-tinta-suave); font-size: 0.95rem;">
-              Plaza de la Constitución, 1<br />
-              40510 Madriguera, Riaza (Segovia)<br />
+            <p style="color: var(--c-tinta-suave); font-size: 0.95rem; display: flex; gap: 0.55rem; align-items: flex-start;">
+              <MapPin size={16} style="color: var(--c-rojo); flex-shrink: 0; margin-top: 0.2rem;" />
+              <span>Plaza de la Constitución, 1<br />40510 Madriguera, Riaza (Segovia)</span>
+            </p>
+            <p style="font-size: 0.95rem; display: flex; gap: 0.55rem; align-items: center; margin-top: 0.7rem;">
+              <Mail size={16} style="color: var(--c-rojo); flex-shrink: 0;" />
               <a href="mailto:info@federacionpueblosderiaza.org">info@federacionpueblosderiaza.org</a>
             </p>
           </div>
