@@ -92,12 +92,13 @@ const fecha = (d) =>
   .aldia-tabs--activa { color: var(--c-rojo) !important; border-bottom-color: var(--c-rojo) !important; }
   .ojillo--rojo { color: var(--c-rojo); }
   .ojillo--evento { color: var(--c-ocre); }
+  .meta { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-tenue); font-family: var(--sans); }
   .tarjeta { position: relative; }
   .tarjeta__etiqueta { display: inline-block; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 2px; margin-bottom: 0.5rem; }
   .tarjeta__etiqueta--noticia { background: transparent; color: var(--c-tenue); padding-left: 0; }
   .tarjeta__etiqueta--evento { background: var(--c-ocre); color: var(--c-papel); }
   .aldia-dest { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2.5rem; align-items: center; padding-bottom: 3.5rem; margin-bottom: 3.5rem; border-bottom: 1px solid var(--c-borde); }
-  .aldia-dest__img { aspect-ratio: 3/2; overflow: hidden; border-radius: 2px; }
+  .aldia-dest__img { aspect-ratio: 3/2; overflow: hidden; border-radius: 3px; border: 1px solid var(--c-borde); }
   .aldia-dest__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
   .aldia-dest:hover .aldia-dest__img img { transform: scale(1.03); }
   .aldia-dest__txt .meta { margin: 0.6rem 0 0.4rem; }
@@ -106,7 +107,7 @@ const fecha = (d) =>
   .leer { color: var(--c-rojo); font-size: 0.9rem; font-weight: 500; }
   .aldia-lista { padding-bottom: 2rem; }
   .rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem 2rem; }
-  .tarjeta__img { overflow: hidden; border-radius: 2px; aspect-ratio: 3/2; margin-bottom: 1rem; }
+  .tarjeta__img { overflow: hidden; border-radius: 3px; border: 1px solid var(--c-borde); aspect-ratio: 3/2; margin-bottom: 1rem; }
   .tarjeta__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
   .tarjeta:hover .tarjeta__img img { transform: scale(1.04); }
   .tarjeta__img--vacia { background: var(--c-crema); display: flex; align-items: center; justify-content: center; }
