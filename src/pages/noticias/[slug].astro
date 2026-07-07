@@ -43,15 +43,19 @@ const enc = encodeURIComponent;
     <div class="noticia__cuerpo contenedor prosa" set:html={contenidoHtml} />
 
     {noticia.fotos && noticia.fotos.filter((f) => !f.es_principal).length > 0 && (
-      <section class="noticia__galeria contenedor-ancho">
+      <section class="noticia__galeria contenedor-ancho" x-data="{ imagen_abierta: null }">
         <h2>Galería</h2>
         <div class="galeria-grid">
           {noticia.fotos.filter((f) => !f.es_principal).map((foto) => (
-            <figure class="galeria-item">
+            <figure class="galeria-item" @click="imagen_abierta = '{foto.url}'">
               <img src={foto.url} alt="Foto galería" />
               {foto.pie_foto && <figcaption>{foto.pie_foto}</figcaption>}
             </figure>
           ))}
+        </div>
+        <div class="galeria-lightbox" x-show="imagen_abierta" @click="imagen_abierta = null" style="display: none;">
+          <img :src="imagen_abierta" alt="Imagen agrandada" @click.stop />
+          <button @click="imagen_abierta = null" class="galeria-lightbox__cerrar">✕</button>
         </div>
       </section>
     )}
@@ -140,10 +144,14 @@ const enc = encodeURIComponent;
   .noticia__portada { margin: 0 auto 1rem; width: 100%; }
   .noticia__portada img { width: 100%; height: auto; object-fit: cover; display: block; border-radius: 2px; aspect-ratio: 16 / 9; }
   .noticia__portada figcaption { font-size: 0.9rem; color: var(--c-tinta-suave); margin-top: 0.8rem; font-style: italic; }
-  .noticia__galeria { margin: 3rem 0; padding-top: 2rem; border-top: 1px solid var(--c-borde); }
+  .noticia__galeria { margin: 3rem auto; padding: 1.5rem 0.5rem 0; border-top: 1px solid var(--c-borde); max-width: 68rem; }
   .noticia__galeria h2 { font-size: 1.6rem; margin-bottom: 1.5rem; font-family: var(--serif); font-weight: 400; }
   .galeria-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.5rem; }
   .galeria-item { overflow: hidden; border-radius: 2px; }
-  .galeria-item img { width: 100%; height: 100%; display: block; aspect-ratio: 3 / 4; object-fit: cover; }
+  .galeria-item img { width: 100%; height: auto; display: block; object-fit: contain; cursor: pointer; transition: transform 0.2s ease; }
+  .galeria-item img:hover { transform: scale(1.05); }
   .galeria-item figcaption { font-size: 0.85rem; color: var(--c-tinta-suave); padding: 0.8rem; background: var(--c-crema); font-style: italic; }
+  .galeria-lightbox { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }
+  .galeria-lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 4px; }
+  .galeria-lightbox__cerrar { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--c-papel); font-size: 2rem; cursor: pointer; z-index: 1001; }
 </style>
