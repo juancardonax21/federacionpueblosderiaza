@@ -83,6 +83,34 @@ a {
 }
 .prosa a:hover { color: var(--acento); text-decoration-color: var(--acento); }
 
+/* Cita arrevistada (pull-quote): se inserta con el botón "Cita" del panel (> ...).
+   No siempre es una cita literal; sirve también para destacar una frase. */
+.prosa blockquote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.4rem, 1rem + 2vw, 2rem);
+  line-height: 1.3;
+  color: var(--c-tinta);
+  margin: 2.4rem 0;
+  padding-left: 1.4rem;
+  border-left: 3px solid var(--c-rojo);
+}
+.prosa blockquote p { margin: 0; }
+.prosa blockquote p + p { margin-top: 0.6rem; }
+/* Atribución opcional: si el autor cierra con "— Nombre", queda en cursiva normal y menor. */
+.prosa blockquote cite,
+.prosa blockquote footer {
+  display: block;
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+  font-style: normal;
+  color: var(--c-tinta-suave);
+}
+/* En pantallas anchas la cita rompe hacia la izquierda, fuera de la caja de texto. */
+@media (min-width: 60rem) {
+  .prosa blockquote { margin-left: -3.5rem; }
+}
+
 strong { font-weight: 600; }
 
 img { max-width: 100%; height: auto; display: block; }

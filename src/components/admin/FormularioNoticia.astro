@@ -227,9 +227,11 @@ const esEdicion = !!noticia;
               <input type="radio" name="foto-principal" value="${idx}" ${foto.es_principal ? "checked" : ""} />
               <span>Principal</span>
             </label>
-            ${foto.es_principal ? `
-              <input type="text" class="fe-foto-pie" value="${foto.pie_foto || ""}" placeholder="Pie de foto (opcional)" data-idx="${idx}" />
-            ` : ""}
+            <select class="fe-foto-tipo" data-idx="${idx}">
+              <option value="editorial" ${(foto.tipo ?? "editorial") === "editorial" ? "selected" : ""}>Editorial (fluye en el artículo)</option>
+              <option value="utilidad" ${foto.tipo === "utilidad" ? "selected" : ""}>Utilidad (cartel, QR, mapa…)</option>
+            </select>
+            <input type="text" class="fe-foto-pie" value="${foto.pie_foto || ""}" placeholder="Pie de foto (opcional)" data-idx="${idx}" />
             <button type="button" class="fe-btn-eliminar" data-idx="${idx}">Eliminar</button>
           </div>
         </div>
@@ -246,6 +248,12 @@ const esEdicion = !!noticia;
     document.querySelectorAll(".fe-foto-pie").forEach((input) => {
       input.addEventListener("input", (e) => {
         fotos[parseInt(e.target.dataset.idx)].pie_foto = e.target.value;
+      });
+    });
+
+    document.querySelectorAll(".fe-foto-tipo").forEach((sel) => {
+      sel.addEventListener("change", (e) => {
+        fotos[parseInt(e.target.dataset.idx)].tipo = e.target.value;
       });
     });
 
@@ -321,8 +329,9 @@ const esEdicion = !!noticia;
     const fotosGuardar = fotos.map((f, idx) => ({
       noticia_id: idFinal,
       url: f.url,
-      pie_foto: f.es_principal ? f.pie_foto : null,
+      pie_foto: f.pie_foto || null,
       es_principal: f.es_principal,
+      tipo: f.tipo || "editorial",
       orden: idx
     }));
     if (fotosGuardar.length > 0) {
@@ -375,6 +384,7 @@ const esEdicion = !!noticia;
   .fe-radio { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer; }
   .fe-radio input { width: 1rem; height: 1rem; cursor: pointer; }
   .fe-foto-pie { padding: 0.4rem 0.6rem; border: 1px solid var(--c-borde); border-radius: 2px; font-size: 0.85rem; font-family: var(--sans); }
+  .fe-foto-tipo { padding: 0.4rem 0.6rem; border: 1px solid var(--c-borde); border-radius: 2px; font-size: 0.85rem; font-family: var(--sans); background: var(--c-papel); color: var(--c-tinta); }
   .fe-btn-eliminar { background: none; color: var(--c-rojo); border: 1px solid var(--c-rojo); padding: 0.3rem 0.8rem; border-radius: 2px; font-size: 0.8rem; cursor: pointer; }
   .fe-btn-eliminar:hover { background: var(--c-rojo); color: var(--c-papel); }
 
