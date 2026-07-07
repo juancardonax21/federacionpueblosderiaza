@@ -50,9 +50,10 @@ export async function getNoticias(limite) {
 export async function getNoticia(slug) {
   const { data, error } = await supabase.from("noticias").select("*").eq("slug", slug).eq("publicada", true).maybeSingle();
   if (error) { console.error("Error noticia:", error.message); return null; }
-  return data;
+  
+  const { data: fotos } = await supabase.from("noticias_fotos").select("*").eq("noticia_id", data.id).order("orden");
+  return { ...data, fotos: fotos || [] };
 }
-
 export async function getNoticiasDePueblo(puebloSlug) {
   const { data: pueblo } = await supabase.from("pueblos").select("id").eq("slug", puebloSlug).maybeSingle();
   if (!pueblo) return [];
