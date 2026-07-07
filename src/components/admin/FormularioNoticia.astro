@@ -182,6 +182,7 @@ const esEdicion = !!noticia;
   // Galería
   const usaVideoCheckbox = document.getElementById("usa-video");
   const videoCampo = document.getElementById("video-campo");
+  const videoUrlInput = document.getElementById("video-url");
   const galeriaLista = document.getElementById("galeria-lista");
   const btnAddFoto = document.getElementById("btn-add-foto");
   const fotoInput = document.getElementById("foto-input");
@@ -274,6 +275,13 @@ const esEdicion = !!noticia;
     const { data: fotosDb } = await supabase.from("noticias_fotos").select("*").eq("noticia_id", noticiaId).order("orden");
     fotos = (fotosDb || []).map(f => ({ ...f, temporal: false }));
     renderGaleria();
+    // Recuperar el vídeo principal si lo hubiera
+    const { data: not } = await supabase.from("noticias").select("video_url").eq("id", noticiaId).maybeSingle();
+    if (not?.video_url) {
+      usaVideoCheckbox.checked = true;
+      videoCampo.hidden = false;
+      videoUrlInput.value = not.video_url;
+    }
   }
 
   // Pueblos
@@ -291,8 +299,16 @@ const esEdicion = !!noticia;
   form.addEventListener("submit", async (ev) => {
     ev.preventDefault();
 
-    if (fotos.length === 0 && !usaVideoCheckbox.checked) {
-      mensaje.textContent = "Error: Añade al menos una foto o un vídeo principal";
+    const videoUrl = usaVideoCheckbox.checked ? videoUrlInput.value.trim() : "";
+
+    if (fotos.length === 0 && !videoUrl) {
+      mensaje.textContent = "Error: Añade al menos una foto o pega la URL de un vídeo principal";
+      mensaje.className = "fe-mensaje fe-mensaje-error";
+      mensaje.hidden = false;
+      return;
+    }
+    if (usaVideoCheckbox.checked && !videoUrl) {
+      mensaje.textContent = "Error: Marcaste \"usar vídeo\" pero no pegaste la URL del vídeo";
       mensaje.className = "fe-mensaje fe-mensaje-error";
       mensaje.hidden = false;
       return;
@@ -305,6 +321,7 @@ const esEdicion = !!noticia;
       contenido: textareaCont.value.trim() || null,
       fecha: document.getElementById("fecha").value,
       portada_url: fotos.find(f => f.es_principal)?.url || null,
+      video_url: videoUrl || null,
       publicada: document.getElementById("publicada").checked,
       destacada: document.getElementById("destacada").checked,
     };

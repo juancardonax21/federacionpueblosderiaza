@@ -19,6 +19,27 @@ const editoriales = fotos
 const utilidad = fotos
   .filter((f) => f.tipo === "utilidad")
   .sort((a, b) => a.orden - b.orden);
+
+// Vídeo principal (sustituye a la foto): convierte la URL de YouTube/Vimeo en URL incrustable.
+function urlEmbed(u) {
+  if (!u) return null;
+  try {
+    const url = new URL(u.trim());
+    const host = url.hostname.replace(/^www\./, "");
+    if (host === "youtu.be") return `https://www.youtube.com/embed/${url.pathname.slice(1)}`;
+    if (host.endsWith("youtube.com")) {
+      const id = url.searchParams.get("v") || url.pathname.split("/").filter(Boolean).pop();
+      return id ? `https://www.youtube.com/embed/${id}` : null;
+    }
+    if (host.endsWith("vimeo.com")) {
+      const id = url.pathname.split("/").filter(Boolean).pop();
+      return id ? `https://player.vimeo.com/video/${id}` : null;
+    }
+  } catch { return null; }
+  return null;
+}
+const videoEmbed = urlEmbed(noticia.video_url);
+
 const fecha = (d) =>
   new Date(d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 
@@ -36,7 +57,13 @@ const enc = encodeURIComponent;
       <time class="noticia__fecha"><Calendar size={18} style="display: inline; margin-right: 0.5rem; vertical-align: middle;" /> {fecha(noticia.fecha)}</time>
     </header>
 
-    {noticia.fotos && noticia.fotos.length > 0 && noticia.fotos.find((f) => f.es_principal) ? (
+    {videoEmbed ? (
+      <figure class="noticia__portada noticia__portada--video contenedor">
+        <div class="video-embed">
+          <iframe src={videoEmbed} title={noticia.titulo} loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </figure>
+    ) : noticia.fotos && noticia.fotos.length > 0 && noticia.fotos.find((f) => f.es_principal) ? (
       <figure class="noticia__portada contenedor">
         <img src={noticia.fotos.find((f) => f.es_principal).url} alt={noticia.titulo} />
         {noticia.fotos.find((f) => f.es_principal).pie_foto && (
@@ -284,6 +311,8 @@ const enc = encodeURIComponent;
   .noticia__portada { margin: 0 auto 1rem; width: 100%; }
   .noticia__portada img { width: 100%; height: auto; object-fit: cover; display: block; border-radius: 2px; aspect-ratio: 16 / 9; }
   .noticia__portada figcaption { font-size: 0.9rem; color: var(--c-tinta-suave); margin-top: 0.8rem; font-style: italic; }
+  .video-embed { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 2px; overflow: hidden; background: #000; }
+  .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   /* Galería justificada: filas alineadas que respetan la proporción de cada foto (el script fija width/height). */
   .galeria-just { display: flex; flex-wrap: wrap; gap: 8px; max-width: 64rem; margin: 1rem auto 3rem; padding-inline: clamp(1.5rem, 5vw, 4rem); align-content: flex-start; }
   .gj-item { position: relative; margin: 0; overflow: hidden; border-radius: 2px; cursor: zoom-in; background: var(--c-crema); flex: 1 1 14rem; }
