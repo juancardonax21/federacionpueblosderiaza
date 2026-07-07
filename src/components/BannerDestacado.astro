@@ -18,17 +18,19 @@ if (!evento) {
   </div>
   
   <div class="banner-dest__contenido">
-    <p class="banner-dest__etiqueta">Próximo evento destacado</p>
-    <h2 class="banner-dest__titulo">{evento.titulo}</h2>
-    <div class="banner-dest__meta">
-      {evento.lugar && <span class="banner-dest__lugar">{evento.lugar}</span>}
-      <span class="banner-dest__fecha">
-        {new Date(evento.fecha_inicio).toLocaleDateString("es-ES", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        })}
-      </span>
+    <div class="banner-dest__texto">
+      <p class="banner-dest__etiqueta">Próximo evento destacado</p>
+      <h2 class="banner-dest__titulo">{evento.titulo}</h2>
+      <div class="banner-dest__meta">
+        {evento.lugar && <span class="banner-dest__lugar">{evento.lugar}</span>}
+        <span class="banner-dest__fecha">
+          {new Date(evento.fecha_inicio).toLocaleDateString("es-ES", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          })}
+        </span>
+      </div>
     </div>
     <a href={`/eventos/${evento.slug}/`} class="banner-dest__btn">
       Más información
@@ -85,10 +87,17 @@ if (!evento) {
   .banner-dest__contenido {
     flex: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1.8rem 1.8rem 1.8rem 1.5rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.1rem 1.8rem;
     margin-left: 1rem;
+  }
+
+  .banner-dest__texto {
+    display: flex;
+    flex-direction: column;
   }
 
   .banner-dest__etiqueta {
@@ -96,7 +105,7 @@ if (!evento) {
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--c-rojo);
-    margin: 0 0 0.6rem;
+    margin: 0 0 0.4rem;
     font-weight: 600;
   }
 
@@ -105,7 +114,7 @@ if (!evento) {
     font-size: clamp(1.3rem, 2.5vw, 1.8rem);
     font-weight: 400;
     line-height: 1.2;
-    margin: 0 0 0.8rem;
+    margin: 0 0 0.5rem;
     color: var(--c-tinta);
   }
 
@@ -113,7 +122,7 @@ if (!evento) {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0;
     flex-wrap: wrap;
   }
 
@@ -130,7 +139,8 @@ if (!evento) {
   }
 
   .banner-dest__btn {
-    align-self: flex-start;
+    flex-shrink: 0;
+    white-space: nowrap;
     display: inline-block;
     background: var(--c-rojo);
     color: var(--c-papel);
@@ -163,7 +173,10 @@ if (!evento) {
     }
 
     .banner-dest__contenido {
-      padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.5rem;
     }
 
     .banner-dest__titulo {
