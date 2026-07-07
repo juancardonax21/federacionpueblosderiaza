@@ -12,166 +12,134 @@ const esEdicion = !!noticia;
 
     <div class="fe-campo">
       <label for="titulo">Título *</label>
-      <input type="text" id="titulo" name="titulo" required
-             value={noticia?.titulo || ""} placeholder="Titular de la noticia" />
+      <input type="text" id="titulo" name="titulo" required value={noticia?.titulo || ""} placeholder="Titular de la noticia" />
     </div>
 
     <div class="fe-campo">
-      <label for="slug">
-        Slug (URL)
-        <button type="button" id="regen-slug" class="fe-mini-btn" title="Regenerar desde el título">↺</button>
-      </label>
+      <label for="slug">Slug (URL) <button type="button" id="regen-slug" class="fe-mini-btn" title="Regenerar">↺</button></label>
       <div class="fe-slug-wrap">
         <span class="fe-slug-prefix">/noticias/</span>
-        <input type="text" id="slug" name="slug" required
-               value={noticia?.slug || ""} placeholder="url-de-la-noticia" />
+        <input type="text" id="slug" name="slug" required value={noticia?.slug || ""} placeholder="url-de-la-noticia" />
         <span class="fe-slug-suffix">/</span>
       </div>
-      <p class="fe-ayuda">Se rellena solo al escribir el título. Puedes editarlo.</p>
+      <p class="fe-ayuda">Se rellena solo al escribir el título.</p>
     </div>
 
     <div class="fe-campo">
       <label for="entradilla">Entradilla</label>
-      <textarea id="entradilla" name="entradilla" rows="2"
-                placeholder="Una o dos frases que resumen la noticia.">{noticia?.entradilla || ""}</textarea>
-      <p class="fe-ayuda">Aparece bajo el titular y en las tarjetas del listado.</p>
+      <textarea id="entradilla" name="entradilla" rows="2" placeholder="Una o dos frases...">{noticia?.entradilla || ""}</textarea>
+      <p class="fe-ayuda">Aparece bajo el titular.</p>
     </div>
 
     <div class="fe-campo">
-      <label for="contenido">Contenido (admite Markdown)</label>
+      <label for="contenido">Contenido (Markdown)</label>
       <div class="fe-md-barra">
-        <button type="button" class="fe-md-btn" data-md="bold" title="Negrita (Cmd+B)"><strong>B</strong></button>
-        <button type="button" class="fe-md-btn" data-md="italic" title="Cursiva (Cmd+I)"><em>i</em></button>
+        <button type="button" class="fe-md-btn" data-md="bold"><strong>B</strong></button>
+        <button type="button" class="fe-md-btn" data-md="italic"><em>i</em></button>
         <span class="fe-md-sep"></span>
-        <button type="button" class="fe-md-btn" data-md="h2" title="Título">H2</button>
-        <button type="button" class="fe-md-btn" data-md="h3" title="Subtítulo">H3</button>
+        <button type="button" class="fe-md-btn" data-md="h2">H2</button>
+        <button type="button" class="fe-md-btn" data-md="h3">H3</button>
         <span class="fe-md-sep"></span>
-        <button type="button" class="fe-md-btn" data-md="ul" title="Lista">• Lista</button>
-        <button type="button" class="fe-md-btn" data-md="quote" title="Cita">❝</button>
+        <button type="button" class="fe-md-btn" data-md="ul">Lista</button>
+        <button type="button" class="fe-md-btn" data-md="quote">Cita</button>
         <span class="fe-md-sep"></span>
-        <button type="button" class="fe-md-btn" data-md="link" title="Enlace (Cmd+K)">🔗</button>
-        <button type="button" class="fe-md-btn" data-md="hr" title="Separador">―</button>
+        <button type="button" class="fe-md-btn" data-md="link">Link</button>
+        <button type="button" class="fe-md-btn" data-md="hr">―</button>
       </div>
-      <textarea id="contenido" name="contenido"
-                placeholder="Escribe aquí. Selecciona texto y pulsa un botón para darle formato.">{noticia?.contenido || ""}</textarea>
-      <p class="fe-ayuda">La barra de arriba te ayuda a dar formato.</p>
+      <textarea id="contenido" name="contenido" placeholder="Escribe aquí...">{noticia?.contenido || ""}</textarea>
     </div>
   </fieldset>
 
   <fieldset class="fe-seccion">
-    <legend class="fe-legend">Fecha y portada</legend>
+    <legend class="fe-legend">Galería de fotos</legend>
 
-    <div class="fe-fila">
-      <div class="fe-campo">
-        <label for="fecha">Fecha *</label>
-        <input type="date" id="fecha" name="fecha" required
-               value={noticia?.fecha || ""} />
-      </div>
-      <div></div>
+    <div class="fe-check-fila">
+      <label class="fe-check">
+        <input type="checkbox" id="usa-video" name="usa-video" />
+        <span>Usar vídeo en lugar de foto principal</span>
+      </label>
+    </div>
+
+    <div class="fe-campo" id="video-campo" hidden>
+      <label for="video-url">URL del vídeo (YouTube/Vimeo)</label>
+      <input type="url" id="video-url" name="video-url" placeholder="https://youtube.com/watch?v=..." />
+      <p class="fe-ayuda">Reemplaza a la foto principal si se rellena.</p>
     </div>
 
     <div class="fe-campo">
-      <label>Portada</label>
-      <div id="portada-preview" class="fe-cartel-preview">
-        {noticia?.portada_url ? (
-          <img src={noticia.portada_url} alt="Portada actual" />
-        ) : (
-          <div class="fe-cartel-vacio">Sin portada</div>
-        )}
+      <label>Fotos de la noticia</label>
+      <div id="galeria-lista" class="fe-galeria-lista">
+        <p class="fe-ayuda">Cargando fotos...</p>
       </div>
-      <input type="file" id="portada-file" accept="image/*" />
-      <input type="hidden" id="portada_url" name="portada_url" value={noticia?.portada_url || ""} />
-      <p class="fe-ayuda">JPG o PNG. Al seleccionar un archivo, se subirá automáticamente.</p>
-      <p id="portada-estado" class="fe-cartel-estado" hidden></p>
+      <button type="button" id="btn-add-foto" class="fe-btn fe-btn-secundario" style="margin-top: 1rem;">+ Añadir foto</button>
+      <input type="file" id="foto-input" accept="image/*" hidden multiple />
+    </div>
+
+    <div class="fe-campo">
+      <label for="fecha">Fecha *</label>
+      <input type="date" id="fecha" name="fecha" required value={noticia?.fecha || ""} />
     </div>
   </fieldset>
 
   <fieldset class="fe-seccion">
     <legend class="fe-legend">Publicación</legend>
-
     <div class="fe-check-fila">
       <label class="fe-check">
         <input type="checkbox" id="publicada" name="publicada" checked={noticia?.publicada ?? true} />
-        <span>Publicada (visible en la web)</span>
+        <span>Publicada</span>
       </label>
-
       <label class="fe-check">
         <input type="checkbox" id="destacada" name="destacada" checked={noticia?.destacada || false} />
         <span>Destacada</span>
       </label>
     </div>
-
     <div class="fe-campo">
       <label>Pueblos vinculados</label>
-      <div id="pueblos-lista" class="fe-pueblos">
-        <p class="fe-ayuda">Cargando pueblos...</p>
-      </div>
+      <div id="pueblos-lista" class="fe-pueblos"></div>
     </div>
   </fieldset>
 
   <div class="fe-acciones">
     <a href="/admin/noticias/" class="fe-btn fe-btn-secundario">Cancelar</a>
-    <button type="submit" id="btn-guardar" class="fe-btn fe-btn-principal">
-      {esEdicion ? "Guardar cambios" : "Crear noticia"}
-    </button>
+    <button type="submit" class="fe-btn fe-btn-principal">{esEdicion ? "Guardar cambios" : "Crear noticia"}</button>
   </div>
-
   <p id="form-mensaje" class="fe-mensaje" hidden></p>
 </form>
 
 <script>
   import { createClient } from "@supabase/supabase-js";
-
-  const supabase = createClient(
-    import.meta.env.PUBLIC_SUPABASE_URL,
-    import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY
-  );
-
+  const supabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY);
   const { data: sess } = await supabase.auth.getSession();
   if (!sess?.session) window.location.href = "/admin/login/";
 
   const form = document.getElementById("form-noticia");
   const noticiaId = form.dataset.noticiaId || null;
   const esEdicion = !!noticiaId;
-
   const inputTitulo = document.getElementById("titulo");
   const inputSlug = document.getElementById("slug");
-  const btnRegen = document.getElementById("regen-slug");
   let slugTocado = esEdicion;
 
   function slugificar(texto) {
-    return texto
-      .toLowerCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9\s-]/g, "")
-      .trim()
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-");
+    return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-").replace(/-+/g, "-");
   }
 
   inputTitulo.addEventListener("input", () => {
     if (!slugTocado) inputSlug.value = slugificar(inputTitulo.value);
   });
   inputSlug.addEventListener("input", () => { slugTocado = true; });
-  btnRegen.addEventListener("click", () => {
+  document.getElementById("regen-slug").addEventListener("click", () => {
     inputSlug.value = slugificar(inputTitulo.value);
     slugTocado = true;
   });
 
   const textareaCont = document.getElementById("contenido");
-
   function envolverSeleccion(inicio, fin = inicio, placeholder = "") {
     const s = textareaCont.selectionStart;
     const e = textareaCont.selectionEnd;
     const texto = textareaCont.value;
     const seleccionado = texto.substring(s, e) || placeholder;
-    const nuevo = texto.substring(0, s) + inicio + seleccionado + fin + texto.substring(e);
-    textareaCont.value = nuevo;
+    textareaCont.value = texto.substring(0, s) + inicio + seleccionado + fin + texto.substring(e);
     textareaCont.focus();
-    const posCursor = seleccionado === placeholder
-      ? s + inicio.length
-      : s + inicio.length + seleccionado.length + fin.length;
-    textareaCont.setSelectionRange(posCursor, posCursor + (seleccionado === placeholder ? placeholder.length : 0));
   }
 
   function prefijarLineas(prefijo, placeholder = "") {
@@ -184,8 +152,6 @@ const esEdicion = !!noticia;
     const conPrefijo = seleccionado.split("\n").map((l) => (l ? prefijo + l : l)).join("\n");
     textareaCont.value = texto.substring(0, inicioLinea) + conPrefijo + texto.substring(e);
     textareaCont.focus();
-    const posCursor = inicioLinea + conPrefijo.length;
-    textareaCont.setSelectionRange(posCursor, posCursor);
   }
 
   function insertarEnCursor(fragmento) {
@@ -197,90 +163,140 @@ const esEdicion = !!noticia;
     const separadorDespues = despues && !despues.startsWith("\n") ? "\n\n" : "";
     textareaCont.value = antes + separador + fragmento + separadorDespues + despues;
     textareaCont.focus();
-    const posCursor = s + separador.length + fragmento.length;
-    textareaCont.setSelectionRange(posCursor, posCursor);
   }
 
   document.querySelectorAll(".fe-md-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const md = btn.dataset.md;
-      if (md === "bold") envolverSeleccion("**", "**", "texto en negrita");
-      else if (md === "italic") envolverSeleccion("*", "*", "texto en cursiva");
+      if (md === "bold") envolverSeleccion("**", "**", "texto");
+      else if (md === "italic") envolverSeleccion("*", "*", "texto");
       else if (md === "h2") prefijarLineas("## ", "Título");
       else if (md === "h3") prefijarLineas("### ", "Subtítulo");
-      else if (md === "ul") prefijarLineas("- ", "Elemento de la lista");
+      else if (md === "ul") prefijarLineas("- ", "Elemento");
       else if (md === "quote") prefijarLineas("> ", "Cita");
-      else if (md === "link") envolverSeleccion("[", "](https://)", "texto del enlace");
+      else if (md === "link") envolverSeleccion("[", "](https://)", "enlace");
       else if (md === "hr") insertarEnCursor("---");
     });
   });
 
-  textareaCont.addEventListener("keydown", (ev) => {
-    if ((ev.metaKey || ev.ctrlKey) && ev.key === "b") { ev.preventDefault(); envolverSeleccion("**", "**", "texto en negrita"); }
-    else if ((ev.metaKey || ev.ctrlKey) && ev.key === "i") { ev.preventDefault(); envolverSeleccion("*", "*", "texto en cursiva"); }
-    else if ((ev.metaKey || ev.ctrlKey) && ev.key === "k") { ev.preventDefault(); envolverSeleccion("[", "](https://)", "texto del enlace"); }
+  // Galería
+  const usaVideoCheckbox = document.getElementById("usa-video");
+  const videoCampo = document.getElementById("video-campo");
+  const galeriaLista = document.getElementById("galeria-lista");
+  const btnAddFoto = document.getElementById("btn-add-foto");
+  const fotoInput = document.getElementById("foto-input");
+  const listaPueblos = document.getElementById("pueblos-lista");
+  const mensaje = document.getElementById("form-mensaje");
+
+  let fotos = [];
+  let fotosPrincipal = null;
+
+  usaVideoCheckbox.addEventListener("change", () => {
+    videoCampo.hidden = !usaVideoCheckbox.checked;
   });
 
-  const inputFile = document.getElementById("portada-file");
-  const inputPortadaUrl = document.getElementById("portada_url");
-  const preview = document.getElementById("portada-preview");
-  const estadoSubida = document.getElementById("portada-estado");
+  btnAddFoto.addEventListener("click", () => fotoInput.click());
 
-  inputFile.addEventListener("change", async () => {
-    const file = inputFile.files[0];
-    if (!file) return;
-    estadoSubida.hidden = false;
-    estadoSubida.textContent = "Subiendo...";
-    estadoSubida.className = "fe-cartel-estado";
+  fotoInput.addEventListener("change", async () => {
+    const files = Array.from(fotoInput.files);
+    if (!files.length) return;
 
-    const ext = file.name.split(".").pop();
-    const nombre = `noticias/${Date.now()}-${slugificar(file.name.replace(/\.[^.]+$/, ""))}.${ext}`;
-    const { data, error } = await supabase.storage
-      .from("imagenes")
-      .upload(nombre, file, { cacheControl: "3600", upsert: false });
+    for (const file of files) {
+      const ext = file.name.split(".").pop();
+      const nombre = `noticias/${Date.now()}-${slugificar(file.name.replace(/\.[^.]+$/, ""))}.${ext}`;
+      const { data, error } = await supabase.storage.from("imagenes").upload(nombre, file, { cacheControl: "3600", upsert: false });
+      if (error) {
+        alert("Error al subir: " + error.message);
+        continue;
+      }
+      const { data: urlData } = supabase.storage.from("imagenes").getPublicUrl(data.path);
+      fotos.push({ url: urlData.publicUrl, pie_foto: "", es_principal: fotos.length === 0, temporal: true });
+    }
+    fotoInput.value = "";
+    renderGaleria();
+  });
 
-    if (error) {
-      estadoSubida.textContent = "Error al subir: " + error.message;
-      estadoSubida.className = "fe-cartel-estado fe-cartel-estado-error";
+  function renderGaleria() {
+    galeriaLista.innerHTML = fotos.length === 0 
+      ? "<p class='fe-ayuda'>Sin fotos aún. Añade una.</p>"
+      : fotos.map((foto, idx) => `
+        <div class="fe-foto-item">
+          <img src="${foto.url}" alt="Foto ${idx + 1}" class="fe-foto-thumb" />
+          <div class="fe-foto-controles">
+            <label class="fe-radio">
+              <input type="radio" name="foto-principal" value="${idx}" ${foto.es_principal ? "checked" : ""} />
+              <span>Principal</span>
+            </label>
+            ${foto.es_principal ? `
+              <input type="text" class="fe-foto-pie" value="${foto.pie_foto || ""}" placeholder="Pie de foto (opcional)" data-idx="${idx}" />
+            ` : ""}
+            <button type="button" class="fe-btn-eliminar" data-idx="${idx}">Eliminar</button>
+          </div>
+        </div>
+      `).join("");
+
+    document.querySelectorAll("input[name='foto-principal']").forEach((radio) => {
+      radio.addEventListener("change", (e) => {
+        fotos.forEach(f => f.es_principal = false);
+        fotos[parseInt(e.target.value)].es_principal = true;
+        renderGaleria();
+      });
+    });
+
+    document.querySelectorAll(".fe-foto-pie").forEach((input) => {
+      input.addEventListener("input", (e) => {
+        fotos[parseInt(e.target.dataset.idx)].pie_foto = e.target.value;
+      });
+    });
+
+    document.querySelectorAll(".fe-btn-eliminar").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        fotos.splice(parseInt(e.target.dataset.idx), 1);
+        renderGaleria();
+      });
+    });
+  }
+
+  // Cargar fotos existentes
+  async function cargarFotosExistentes() {
+    if (!esEdicion) {
+      renderGaleria();
       return;
     }
+    const { data: fotosDb } = await supabase.from("noticias_fotos").select("*").eq("noticia_id", noticiaId).order("orden");
+    fotos = (fotosDb || []).map(f => ({ ...f, temporal: false }));
+    renderGaleria();
+  }
 
-    const { data: urlData } = supabase.storage.from("imagenes").getPublicUrl(data.path);
-    inputPortadaUrl.value = urlData.publicUrl;
-    preview.innerHTML = `<img src="${urlData.publicUrl}" alt="Portada subida" />`;
-    estadoSubida.textContent = "✓ Portada subida correctamente.";
-    estadoSubida.className = "fe-cartel-estado fe-cartel-estado-ok";
-  });
-
-  const listaPueblos = document.getElementById("pueblos-lista");
-  const { data: pueblos } = await supabase.from("pueblos").select("id, slug, nombre").order("nombre");
+  // Pueblos
+  const { data: pueblos } = await supabase.from("pueblos").select("id, nombre").order("nombre");
   let pueblosVinculados = new Set();
-
   if (esEdicion) {
     const { data: rels } = await supabase.from("noticias_pueblos").select("pueblo_id").eq("noticia_id", noticiaId);
     pueblosVinculados = new Set((rels || []).map((r) => r.pueblo_id));
   }
-
   listaPueblos.innerHTML = pueblos.map((p) => `
-    <label class="fe-pueblo">
-      <input type="checkbox" name="pueblos" value="${p.id}" ${pueblosVinculados.has(p.id) ? "checked" : ""} />
-      <span>${p.nombre}</span>
-    </label>
+    <label class="fe-pueblo"><input type="checkbox" name="pueblos" value="${p.id}" ${pueblosVinculados.has(p.id) ? "checked" : ""} /><span>${p.nombre}</span></label>
   `).join("");
 
-  const mensaje = document.getElementById("form-mensaje");
-
+  // Submit
   form.addEventListener("submit", async (ev) => {
     ev.preventDefault();
-    mensaje.hidden = true;
+
+    if (fotos.length === 0 && !usaVideoCheckbox.checked) {
+      mensaje.textContent = "Error: Añade al menos una foto o un vídeo principal";
+      mensaje.className = "fe-mensaje fe-mensaje-error";
+      mensaje.hidden = false;
+      return;
+    }
 
     const datos = {
       titulo: inputTitulo.value.trim(),
       slug: inputSlug.value.trim(),
       entradilla: document.getElementById("entradilla").value.trim() || null,
-      contenido: document.getElementById("contenido").value.trim() || null,
+      contenido: textareaCont.value.trim() || null,
       fecha: document.getElementById("fecha").value,
-      portada_url: inputPortadaUrl.value || null,
+      portada_url: fotos.find(f => f.es_principal)?.url || null,
       publicada: document.getElementById("publicada").checked,
       destacada: document.getElementById("destacada").checked,
     };
@@ -292,14 +308,28 @@ const esEdicion = !!noticia;
     let idFinal;
     if (esEdicion) {
       const { error } = await supabase.from("noticias").update(datos).eq("id", noticiaId);
-      if (error) return mostrarError(error.message);
+      if (error) { mensaje.textContent = "Error: " + error.message; mensaje.className = "fe-mensaje fe-mensaje-error"; mensaje.hidden = false; return; }
       idFinal = noticiaId;
     } else {
       const { data, error } = await supabase.from("noticias").insert(datos).select("id").single();
-      if (error) return mostrarError(error.message);
+      if (error) { mensaje.textContent = "Error: " + error.message; mensaje.className = "fe-mensaje fe-mensaje-error"; mensaje.hidden = false; return; }
       idFinal = data.id;
     }
 
+    // Guardar fotos
+    await supabase.from("noticias_fotos").delete().eq("noticia_id", idFinal);
+    const fotosGuardar = fotos.map((f, idx) => ({
+      noticia_id: idFinal,
+      url: f.url,
+      pie_foto: f.es_principal ? f.pie_foto : null,
+      es_principal: f.es_principal,
+      orden: idx
+    }));
+    if (fotosGuardar.length > 0) {
+      await supabase.from("noticias_fotos").insert(fotosGuardar);
+    }
+
+    // Pueblos
     await supabase.from("noticias_pueblos").delete().eq("noticia_id", idFinal);
     const seleccionados = [...document.querySelectorAll('input[name="pueblos"]:checked')].map((cb) => cb.value);
     if (seleccionados.length > 0) {
@@ -307,92 +337,60 @@ const esEdicion = !!noticia;
       await supabase.from("noticias_pueblos").insert(relaciones);
     }
 
-    mensaje.textContent = esEdicion ? "✓ Cambios guardados." : "✓ Noticia creada.";
+    mensaje.textContent = esEdicion ? "✓ Guardado" : "✓ Creado";
     mensaje.className = "fe-mensaje fe-mensaje-ok";
     mensaje.hidden = false;
     setTimeout(() => { window.location.href = "/admin/noticias/"; }, 1200);
   });
 
-  function mostrarError(msg) {
-    mensaje.textContent = "Error: " + msg;
-    mensaje.className = "fe-mensaje fe-mensaje-error";
-    mensaje.hidden = false;
-  }
-
   document.getElementById("entradilla").style.minHeight = "5rem";
+  cargarFotosExistentes();
 </script>
 
 <style is:global>
   .fe { max-width: 48rem; }
   .fe-seccion { border: 1px solid var(--c-borde); border-radius: 2px; padding: 1.5rem; margin-bottom: 1.5rem; background: var(--c-papel); }
-  .fe-legend { font-family: var(--sans); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-rojo); padding: 0 0.5rem; font-weight: 500; }
-
+  .fe-legend { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-rojo); padding: 0 0.5rem; font-weight: 500; }
   .fe-campo { margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
-  .fe-campo:last-child { margin-bottom: 0; }
   .fe-campo label { font-size: 0.85rem; font-weight: 500; color: var(--c-tinta); display: flex; align-items: center; gap: 0.5rem; }
-  .fe-campo input[type="text"],
-  .fe-campo input[type="url"],
-  .fe-campo input[type="date"],
-  .fe-campo textarea { padding: 0.6rem 0.8rem; border: 1px solid var(--c-borde); border-radius: 2px; font-family: var(--sans); font-size: 0.95rem; background: var(--c-papel); color: var(--c-tinta); }
+  .fe-campo input, .fe-campo textarea { padding: 0.6rem 0.8rem; border: 1px solid var(--c-borde); border-radius: 2px; font-family: var(--sans); font-size: 0.95rem; background: var(--c-papel); color: var(--c-tinta); }
   .fe-campo input:focus, .fe-campo textarea:focus { outline: none; border-color: var(--c-rojo); }
-  .fe-ayuda { font-size: 0.78rem; color: var(--c-tenue); margin: 0; }
-
-  #contenido {
-    min-height: 28rem !important;
-    padding: 1.2rem !important;
-    font-size: 0.9rem !important;
-    background: var(--c-papel) !important;
-    border: 1px solid var(--c-borde) !important;
-    font-family: monospace !important;
-    line-height: 1.6 !important;
-  }
-  #contenido:focus {
-    border-color: var(--c-rojo) !important;
-    box-shadow: 0 0 0 3px rgba(160, 48, 16, 0.1) !important;
-  }
-
-  .fe-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-  @media (max-width: 640px) { .fe-fila { grid-template-columns: 1fr; } }
-
+  #contenido { min-height: 28rem !important; padding: 1.2rem !important; font-size: 0.9rem !important; font-family: monospace !important; line-height: 1.6 !important; }
+  #contenido:focus { box-shadow: 0 0 0 3px rgba(160, 48, 16, 0.1) !important; }
+  .fe-md-barra { display: flex; align-items: center; gap: 0.2rem; padding: 0.6rem; background: var(--c-crema); border: 1px solid var(--c-borde); border-bottom: none; border-radius: 3px 3px 0 0; flex-wrap: wrap; }
+  .fe-md-btn { background: none; border: 1px solid transparent; padding: 0.4rem 0.7rem; font-size: 0.82rem; cursor: pointer; border-radius: 2px; color: var(--c-tinta-suave); font-family: var(--sans); }
+  .fe-md-btn:hover { background: var(--c-papel); border-color: var(--c-borde); color: var(--c-tinta); }
+  .fe-md-sep { width: 1px; height: 1.4rem; background: var(--c-borde); margin: 0 0.4rem; }
+  .fe-md-barra + textarea { border-top: none; border-radius: 0 0 3px 3px; }
   .fe-slug-wrap { display: flex; align-items: center; border: 1px solid var(--c-borde); border-radius: 2px; overflow: hidden; }
-  .fe-slug-wrap:focus-within { border-color: var(--c-rojo); }
-  .fe-slug-prefix, .fe-slug-suffix { background: var(--c-crema); color: var(--c-tenue); padding: 0.6rem 0.6rem; font-size: 0.85rem; font-family: monospace; }
+  .fe-slug-prefix, .fe-slug-suffix { background: var(--c-crema); color: var(--c-tenue); padding: 0.6rem; font-size: 0.85rem; font-family: monospace; }
   .fe-slug-wrap input { border: none !important; flex: 1; padding: 0.6rem !important; font-family: monospace !important; }
-  .fe-slug-wrap input:focus { outline: none; }
-
   .fe-mini-btn { background: none; border: 1px solid var(--c-borde); padding: 0.15rem 0.4rem; font-size: 0.75rem; cursor: pointer; border-radius: 2px; color: var(--c-tinta-suave); }
   .fe-mini-btn:hover { color: var(--c-rojo); border-color: var(--c-rojo); }
-
-  .fe-cartel-preview { width: 12rem; margin-bottom: 0.8rem; }
-  .fe-cartel-preview img { width: 100%; height: auto; border: 1px solid var(--c-borde); border-radius: 2px; display: block; }
-  .fe-cartel-vacio { aspect-ratio: 3/4; background: var(--c-crema); border: 1px dashed var(--c-borde); display: flex; align-items: center; justify-content: center; color: var(--c-tenue); font-size: 0.85rem; }
-  .fe-cartel-estado { font-size: 0.85rem; margin: 0.5rem 0 0; }
-  .fe-cartel-estado-ok { color: var(--c-verde); }
-  .fe-cartel-estado-error { color: var(--c-rojo); }
+  
+  .fe-galeria-lista { display: flex; flex-direction: column; gap: 1rem; padding: 1rem; background: var(--c-crema); border-radius: 2px; margin-bottom: 1rem; }
+  .fe-foto-item { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; background: var(--c-papel); border: 1px solid var(--c-borde); border-radius: 2px; }
+  .fe-foto-thumb { width: 6rem; height: 6rem; object-fit: cover; border-radius: 2px; flex-shrink: 0; }
+  .fe-foto-controles { flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
+  .fe-radio { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer; }
+  .fe-radio input { width: 1rem; height: 1rem; cursor: pointer; }
+  .fe-foto-pie { padding: 0.4rem 0.6rem; border: 1px solid var(--c-borde); border-radius: 2px; font-size: 0.85rem; font-family: var(--sans); }
+  .fe-btn-eliminar { background: none; color: var(--c-rojo); border: 1px solid var(--c-rojo); padding: 0.3rem 0.8rem; border-radius: 2px; font-size: 0.8rem; cursor: pointer; }
+  .fe-btn-eliminar:hover { background: var(--c-rojo); color: var(--c-papel); }
 
   .fe-check-fila { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem; }
   .fe-check { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; }
   .fe-check input { width: 1.1rem; height: 1.1rem; cursor: pointer; }
-  .fe-check span { font-size: 0.9rem; }
-
   .fe-pueblos { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0.5rem 1rem; padding: 0.5rem 0; }
   .fe-pueblo { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.88rem; }
-  .fe-pueblo input { width: 1rem; height: 1rem; cursor: pointer; }
-
   .fe-acciones { display: flex; gap: 0.8rem; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--c-borde); }
-  .fe-btn { display: inline-block; padding: 0.7rem 1.4rem; font-size: 0.9rem; letter-spacing: 0.03em; border-radius: 2px; border: none; cursor: pointer; font-family: var(--sans); text-decoration: none; transition: background 0.15s ease, color 0.15s ease; }
+  .fe-btn { display: inline-block; padding: 0.7rem 1.4rem; font-size: 0.9rem; letter-spacing: 0.03em; border-radius: 2px; border: none; cursor: pointer; font-family: var(--sans); text-decoration: none; transition: background 0.15s ease; }
   .fe-btn-principal { background: var(--c-rojo); color: var(--c-papel); font-weight: 500; }
   .fe-btn-principal:hover { background: var(--c-rojo-hondo); }
   .fe-btn-secundario { background: none; color: var(--c-tinta-suave); border: 1px solid var(--c-borde); }
   .fe-btn-secundario:hover { color: var(--c-tinta); border-color: var(--c-tinta); }
-
   .fe-mensaje { padding: 0.8rem 1rem; border-radius: 2px; font-size: 0.9rem; margin-top: 1rem; }
   .fe-mensaje-ok { background: var(--c-verde); color: var(--c-papel); }
   .fe-mensaje-error { background: var(--c-rojo); color: var(--c-papel); }
-
-  .fe-md-barra { display: flex; align-items: center; gap: 0.2rem; padding: 0.6rem; background: var(--c-crema); border: 1px solid var(--c-borde); border-bottom: none; border-radius: 3px 3px 0 0; flex-wrap: wrap; }
-  .fe-md-btn { background: none; border: 1px solid transparent; padding: 0.4rem 0.7rem; font-size: 0.82rem; cursor: pointer; border-radius: 2px; color: var(--c-tinta-suave); font-family: var(--sans); min-width: auto; }
-  .fe-md-btn:hover { background: var(--c-papel); border-color: var(--c-borde); color: var(--c-tinta); }
-  .fe-md-sep { width: 1px; height: 1.4rem; background: var(--c-borde); margin: 0 0.4rem; }
-  .fe-md-barra + textarea { border-top: none; border-radius: 0 0 3px 3px; }
+  .fe-ayuda { font-size: 0.78rem; color: var(--c-tenue); margin: 0; }
 </style>
