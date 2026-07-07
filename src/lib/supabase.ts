@@ -39,20 +39,44 @@ export interface Pueblo {
 
 // --- Noticias ---
 
+// Extrae el ID de vídeo de una URL de YouTube (watch, youtu.be, shorts).
+function youtubeId(u) {
+  if (!u) return null;
+  try {
+    const url = new URL(u.trim());
+    const host = url.hostname.replace(/^www\./, "");
+    if (host === "youtu.be") return url.pathname.slice(1) || null;
+    if (host.endsWith("youtube.com")) {
+      return url.searchParams.get("v") || url.pathname.split("/").filter(Boolean).pop() || null;
+    }
+  } catch { /* url no válida */ }
+  return null;
+}
+
+// Portada efectiva de una noticia: la imagen subida, o la miniatura de YouTube
+// si es una noticia de vídeo sin foto. Sirve para tarjetas y vista previa al compartir.
+export function portadaNoticia(n) {
+  if (!n) return null;
+  if (n.portada_url) return n.portada_url;
+  const id = youtubeId(n.video_url);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+}
+
 export async function getNoticias(limite) {
   let q = supabase.from("noticias").select("*").eq("publicada", true).order("fecha", { ascending: false });
   if (limite) q = q.limit(limite);
   const { data, error } = await q;
   if (error) { console.error("Error noticias:", error.message); return []; }
-  return data || [];
+  return (data || []).map((n) => ({ ...n, portada: portadaNoticia(n) }));
 }
 
 export async function getNoticia(slug) {
   const { data, error } = await supabase.from("noticias").select("*").eq("slug", slug).eq("publicada", true).maybeSingle();
   if (error) { console.error("Error noticia:", error.message); return null; }
-  
+  if (!data) return null;
+
   const { data: fotos } = await supabase.from("noticias_fotos").select("*").eq("noticia_id", data.id).order("orden");
-  return { ...data, fotos: fotos || [] };
+  return { ...data, fotos: fotos || [], portada: portadaNoticia(data) };
 }
 export async function getNoticiasDePueblo(puebloSlug) {
   const { data: pueblo } = await supabase.from("pueblos").select("id").eq("slug", puebloSlug).maybeSingle();
@@ -62,7 +86,7 @@ export async function getNoticiasDePueblo(puebloSlug) {
   const ids = rels.map((r) => r.noticia_id);
   const { data, error } = await supabase.from("noticias").select("*").in("id", ids).eq("publicada", true).order("fecha", { ascending: false });
   if (error) return [];
-  return data || [];
+  return (data || []).map((n) => ({ ...n, portada: portadaNoticia(n) }));
 }
 
 // --- Pueblos ---

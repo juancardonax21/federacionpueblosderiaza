@@ -48,7 +48,7 @@ const urlNoticia = `https://federacionpueblosderiaza.org/noticias/${slug}/`;
 const textoCompartir = `${noticia.titulo} · Federación de Pueblos de Riaza`;
 const enc = encodeURIComponent;
 ---
-<Base title={`${noticia.titulo} · Federación Pueblos de Riaza`} description={noticia.entradilla || noticia.titulo} image={noticia.portada_url}>
+<Base title={`${noticia.titulo} · Federación Pueblos de Riaza`} description={noticia.entradilla || noticia.titulo} image={noticia.portada}>
   <article class="noticia">
     <header class="noticia__cab contenedor">
       <a class="volver" href="/al-dia/"><ArrowLeft size={15} /> Al día</a>
@@ -148,8 +148,8 @@ const enc = encodeURIComponent;
       <div class="rejilla">
         {otras.map((n) => (
           <a class="tarjeta" href={`/noticias/${n.slug}/`}>
-            {n.portada_url ? (
-              <div class="tarjeta__img"><img src={n.portada_url} alt={n.titulo} /></div>
+            {n.portada ? (
+              <div class="tarjeta__img"><img src={n.portada} alt={n.titulo} /></div>
             ) : (
               <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
             )}

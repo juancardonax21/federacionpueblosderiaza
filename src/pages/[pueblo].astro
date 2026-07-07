@@ -157,8 +157,8 @@ const siguiente = todos[(idx + 1) % todos.length];
         <div class="rejilla">
           {relacionadas.map((n) => (
             <a class="tarjeta" href={`/noticias/${n.slug}/`}>
-              {n.portada_url ? (
-                <div class="tarjeta__img"><img src={n.portada_url} alt={n.titulo} /></div>
+              {n.portada ? (
+                <div class="tarjeta__img"><img src={n.portada} alt={n.titulo} /></div>
               ) : (
                 <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
               )}
