@@ -38,12 +38,21 @@ function fechaEvento(inicio, fin) {
   return `Del ${new Date(inicio).toLocaleDateString("es-ES", { day: "numeric", month: "long" })} al ${fecha(fin)}`;
 }
 
+// Fecha compacta DD/MM/AA para las tarjetas de actualidad.
+const fnum = (d) => {
+  const x = new Date(d);
+  const p = (n) => String(n).padStart(2, "0");
+  return `${p(x.getDate())}/${p(x.getMonth() + 1)}/${String(x.getFullYear()).slice(-2)}`;
+};
+const fechaEventoNum = (inicio, fin) =>
+  !fin || fin === inicio ? fnum(inicio) : `${fnum(inicio)} – ${fnum(fin)}`;
+
 // Bloque combinado: eventos + noticias del pueblo, ordenados por fecha (más reciente primero).
 const actualidad = [
   ...eventosPueblo.map((e) => ({
     tipo: "evento",
     fecha: e.fecha_inicio,
-    fechaTexto: fechaEvento(e.fecha_inicio, e.fecha_fin),
+    fechaTexto: fechaEventoNum(e.fecha_inicio, e.fecha_fin),
     titulo: e.titulo,
     url: `/eventos/${e.slug}/`,
     imagen: e.cartel_url,
@@ -52,7 +61,7 @@ const actualidad = [
   ...relacionadas.map((n) => ({
     tipo: "noticia",
     fecha: n.fecha,
-    fechaTexto: fecha(n.fecha),
+    fechaTexto: fnum(n.fecha),
     titulo: n.titulo,
     url: `/noticias/${n.slug}/`,
     imagen: n.portada,
@@ -226,10 +235,11 @@ const actualidad = [
   .pb-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .pb-actualidad { margin-top: 5rem; }
-  .tarjeta__meta { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-tenue); margin: 0.5rem 0 0; }
-  .tarjeta__tipo { font-weight: 600; }
+  .tarjeta__meta { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-tenue); margin: 0.5rem 0 0; }
+  .tarjeta__tipo { display: block; font-weight: 600; margin-bottom: 0.2rem; }
   .tarjeta__tipo--evento { color: var(--c-ocre); }
   .tarjeta__tipo--noticia { color: var(--c-rojo); }
+  .tarjeta__meta time { display: block; letter-spacing: 0.04em; }
   .tarjeta__lugar { font-size: 0.85rem; color: var(--c-tinta-suave); margin-top: 0.2rem; }
   .seccion-cab { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2rem; }
   .seccion-cab h2 { font-size: 1.8rem; }
