@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import Icono from "../components/Icono.astro";
 import { ArrowLeft, Users, Mail } from "@lucide/astro";
-import { getPueblo, getPueblos, getNoticiasDePueblo, getFotosDePueblo, getEventosDePueblo } from "../lib/supabase";
+import { getPueblo, getNoticiasDePueblo, getFotosDePueblo, getEventosDePueblo } from "../lib/supabase";
 
 const { pueblo: slug } = Astro.params;
 const pb = await getPueblo(slug);
@@ -38,10 +38,27 @@ function fechaEvento(inicio, fin) {
   return `Del ${new Date(inicio).toLocaleDateString("es-ES", { day: "numeric", month: "long" })} al ${fecha(fin)}`;
 }
 
-// Siguiente pueblo (todos ordenados)
-const todos = await getPueblos();
-const idx = todos.findIndex((p) => p.slug === pb.slug);
-const siguiente = todos[(idx + 1) % todos.length];
+// Bloque combinado: eventos + noticias del pueblo, ordenados por fecha (más reciente primero).
+const actualidad = [
+  ...eventosPueblo.map((e) => ({
+    tipo: "evento",
+    fecha: e.fecha_inicio,
+    fechaTexto: fechaEvento(e.fecha_inicio, e.fecha_fin),
+    titulo: e.titulo,
+    url: `/eventos/${e.slug}/`,
+    imagen: e.cartel_url,
+    lugar: e.lugar,
+  })),
+  ...relacionadas.map((n) => ({
+    tipo: "noticia",
+    fecha: n.fecha,
+    fechaTexto: fecha(n.fecha),
+    titulo: n.titulo,
+    url: `/noticias/${n.slug}/`,
+    imagen: n.portada,
+    lugar: null,
+  })),
+].sort((a, b) => (a.fecha < b.fecha ? 1 : -1)).slice(0, 6);
 ---
 
 <Base title={`${pb.nombre} · Pueblos de Riaza`} description={`${pb.nombre}, en la Sierra de Ayllón. ${pb.piedra}.`}>
@@ -131,51 +148,28 @@ const siguiente = todos[(idx + 1) % todos.length];
       </section>
     )}
 
-    {eventosPueblo.length > 0 && (
-      <section class="pb-eventos contenedor-ancho">
-        <header class="seccion-cab"><h2>Eventos en {pb.nombre}</h2><span class="linea"></span></header>
+    {actualidad.length > 0 && (
+      <section class="pb-actualidad contenedor-ancho">
+        <header class="seccion-cab"><h2>Eventos y noticias de {pb.nombre}</h2><span class="linea"></span></header>
         <div class="rejilla">
-          {eventosPueblo.map((e) => (
-            <a class="tarjeta" href={`/eventos/${e.slug}/`}>
-              {e.cartel_url ? (
-                <div class="tarjeta__img tarjeta__img--cartel"><img src={e.cartel_url} alt={e.titulo} /></div>
+          {actualidad.map((it) => (
+            <a class="tarjeta" href={it.url}>
+              {it.imagen ? (
+                <div class="tarjeta__img"><img src={it.imagen} alt={it.titulo} /></div>
               ) : (
                 <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
               )}
-              <time class="meta">{fechaEvento(e.fecha_inicio, e.fecha_fin)}</time>
-              <h3 class="tarjeta__titulo">{e.titulo}</h3>
-              {e.lugar && <p class="tarjeta__lugar">{e.lugar}</p>}
+              <p class="tarjeta__meta">
+                <span class={`tarjeta__tipo tarjeta__tipo--${it.tipo}`}>{it.tipo === "evento" ? "Evento" : "Noticia"}</span>
+                <time>{it.fechaTexto}</time>
+              </p>
+              <h3 class="tarjeta__titulo">{it.titulo}</h3>
+              {it.lugar && <p class="tarjeta__lugar">{it.lugar}</p>}
             </a>
           ))}
         </div>
       </section>
     )}
-
-    {relacionadas.length > 0 && (
-      <section class="pb-noticias contenedor-ancho">
-        <header class="seccion-cab"><h2>Noticias de {pb.nombre}</h2><span class="linea"></span></header>
-        <div class="rejilla">
-          {relacionadas.map((n) => (
-            <a class="tarjeta" href={`/noticias/${n.slug}/`}>
-              {n.portada ? (
-                <div class="tarjeta__img"><img src={n.portada} alt={n.titulo} /></div>
-              ) : (
-                <div class="tarjeta__img tarjeta__img--vacia"><span>FPR</span></div>
-              )}
-              <time class="meta">{fecha(n.fecha)}</time>
-              <h3 class="tarjeta__titulo">{n.titulo}</h3>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
-
-    <nav class="pb-siguiente contenedor-ancho">
-      <a href={`/${siguiente.slug}/`}>
-        <span class="meta">Siguiente pueblo</span>
-        <span class="pb-siguiente__n">{siguiente.nombre} →</span>
-      </a>
-    </nav>
   </article>
 </Base>
 
@@ -231,10 +225,12 @@ const siguiente = todos[(idx + 1) % todos.length];
   .pb-foto:hover { transform: scale(1.02); }
   .pb-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-  .pb-noticias { margin-top: 5rem; }
-  .pb-eventos { margin-top: 5rem; }
-  .pb-eventos .tarjeta__img--cartel { aspect-ratio: 3/4; }
-  .pb-eventos .tarjeta__lugar { font-size: 0.88rem; color: var(--c-tinta-suave); margin-top: 0.2rem; }
+  .pb-actualidad { margin-top: 5rem; }
+  .tarjeta__meta { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-tenue); margin: 0.5rem 0 0; }
+  .tarjeta__tipo { font-weight: 600; }
+  .tarjeta__tipo--evento { color: var(--c-ocre); }
+  .tarjeta__tipo--noticia { color: var(--c-rojo); }
+  .tarjeta__lugar { font-size: 0.85rem; color: var(--c-tinta-suave); margin-top: 0.2rem; }
   .seccion-cab { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2rem; }
   .seccion-cab h2 { font-size: 1.8rem; }
   .seccion-cab .linea { flex: 1; height: 1px; background: var(--c-borde); }
@@ -247,9 +243,6 @@ const siguiente = todos[(idx + 1) % todos.length];
   .tarjeta__img--vacia span { font-family: var(--serif); font-size: 1.5rem; color: var(--c-borde); letter-spacing: 0.1em; }
   .tarjeta__titulo { font-size: 1rem; line-height: 1.25; margin: 0.3rem 0 0; transition: color 0.2s ease; }
   .tarjeta:hover .tarjeta__titulo { color: var(--c-rojo); }
-  .pb-siguiente { margin-top: 5rem; padding-top: 2rem; padding-bottom: 4rem; border-top: 1px solid var(--c-borde); }
-  .pb-siguiente__n { font-family: var(--serif); font-size: 1.6rem; transition: color 0.2s ease; display: block; margin-top: 0.3rem; }
-  .pb-siguiente a:hover .pb-siguiente__n { color: var(--c-rojo); }
   @media (max-width: 860px) {
     .pb-cuerpo { grid-template-columns: 1fr; }
     .pb-ficha { position: static; }
