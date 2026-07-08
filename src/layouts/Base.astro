@@ -1,7 +1,8 @@
 ---
 import "../styles/global.css";
 import Logo from "../components/Logo.astro";
-import { MapPin, Mail } from "@lucide/astro";
+import { MapPin, Mail, ShieldCheck } from "@lucide/astro";
+import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title: string;
@@ -125,6 +126,10 @@ const year = new Date().getFullYear();
             </p>
           </div>
         </div>
+        <p class="sitio-footer__cookies">
+          <ShieldCheck size={15} style="color: var(--c-verde); flex-shrink: 0;" />
+          Web sin cookies · analítica anónima, respetamos tu privacidad
+        </p>
         <div class="sitio-footer__legal">
           © {year} Federación de Pueblos de Riaza ·
           <a href="/politica-de-privacidad/">Política de privacidad</a> ·
@@ -132,6 +137,7 @@ const year = new Date().getFullYear();
         </div>
       </div>
     </footer>
+    <Analytics />
     <script>
       const abrir = document.getElementById("abrir-menu");
       const cerrar = document.getElementById("cerrar-menu");

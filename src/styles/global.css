@@ -201,7 +201,8 @@ img { max-width: 100%; height: auto; display: block; }
 .sitio-footer li:last-child::after { display: none; }
 .sitio-footer a { color: var(--c-tinta-suave); font-size: 0.95rem; }
 .sitio-footer a:hover { color: var(--acento); }
-.sitio-footer__legal { margin-top: 2.5rem; font-size: 0.8rem; color: var(--c-tenue); }
+.sitio-footer__cookies { margin-top: 2.5rem; display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.8rem; color: var(--c-tinta-suave); }
+.sitio-footer__legal { margin-top: 0.8rem; font-size: 0.8rem; color: var(--c-tenue); }
 .sitio-footer__codinse {
   margin-top: 1.2rem; font-size: 0.85rem; color: var(--c-tinta-suave); max-width: 24rem;
   padding-top: 1rem; border-top: 1px solid var(--c-borde);

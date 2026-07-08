@@ -30,6 +30,10 @@ Puedes ejercer tus derechos de **acceso, rectificación, supresión, oposición,
 
 Se han adoptado las medidas de seguridad técnicas y organizativas necesarias para proteger los datos personales frente a pérdida, mal uso, acceso no autorizado o divulgación.
 
-### 8. Cambios en la política de privacidad
+### 8. Cookies y analítica
+
+Esta web **no utiliza cookies** ni tecnologías de seguimiento que identifiquen a las personas usuarias. Para conocer de forma agregada cuántas personas nos visitan y qué contenidos resultan de interés, empleamos una **analítica anónima y sin cookies** (Vercel Web Analytics), que no recopila datos personales, no elabora perfiles ni comparte información con terceros con fines publicitarios. Por este motivo, esta web no necesita mostrar un banner de consentimiento de cookies.
+
+### 9. Cambios en la política de privacidad
 
 Nos reservamos el derecho de modificar esta Política para adaptarla a futuras novedades legales o funcionales. Cualquier cambio será publicado en esta misma página.
